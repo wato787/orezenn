@@ -114,18 +114,19 @@ const articles = await fetchArticles({
 - **継承**: `MicroCMSContent`を基底型として使用
 - **拡張**: `MicroCMSDate`フィールドを含む
 
-#### 完成した型定義
-- **Article**: 記事データ（統計、SEO、技術スタック等）
-- **Author**: 作成者（統計、SNSリンク、プロフィール等）
-- **Category**: カテゴリ（階層構造、統計情報等）
-- **Tag**: タグ（関連タグ、統計情報等）
+#### 完成した型定義（2人用ブログ最適化）
+- **Article**: 記事データ（SEO、技術スタック、読書時間等）
+- **Author**: 作成者（基本プロフィール、SNSリンク）
+- **Category**: カテゴリ（アイコン、色、ソート順）
+- **Tag**: タグ（基本情報のみ）
 - **Series**: シリーズ（記事グループ化）
-- **検索・フィルタ**: 高度な検索パラメータ
-- **統計・分析**: トレンド、人気記事等
+- **検索・フィルタ**: 必要十分な検索パラメータ
 - **SEO・サイトマップ**: RSS、サイトマップ用型
 
+**特徴**: 統計・ソーシャル機能を除外したシンプル設計
+
 ```typescript
-// ✅ Zenn/Qiitaスタイルの詳細な型定義
+// ✅ 2人用ブログに最適化された型定義
 export interface Article extends MicroCMSContent {
   title: string;
   slug: string;
@@ -138,10 +139,10 @@ export interface Article extends MicroCMSContent {
   category: Category;
   tags: Tag[];
   series?: Series;
-  stats?: ArticleStats; // 統計情報
   seo?: ArticleSEO; // SEO情報
   techStack?: string[]; // 使用技術
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  readingTime?: number; // 読書時間（分）
 }
 ```
 

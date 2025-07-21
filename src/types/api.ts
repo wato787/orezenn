@@ -10,7 +10,7 @@ export interface MicroCMSContent extends MicroCMSDate {
 /**
  * 記事のステータス
  */
-export type ArticleStatus = 'draft' | 'published' | 'private' | 'scheduled';
+export type ArticleStatus = 'draft' | 'published' | 'private';
 
 /**
  * 記事の種別
@@ -29,27 +29,14 @@ export interface Author extends MicroCMSContent {
   location?: string;
   company?: string;
   position?: string; // 職種
-  experience?: number; // 経験年数
   socialLinks?: {
     twitter?: string;
     github?: string;
     website?: string;
     linkedin?: string;
-    zenn?: string;
-    qiita?: string;
   };
-  // 統計情報
-  stats?: {
-    articlesCount: number;
-    followersCount: number;
-    followingCount: number;
-    likesCount: number;
-    totalViews: number;
-  };
-  // 設定
   isPublic: boolean;
   isEmailPublic: boolean;
-  isHireable: boolean;
 }
 
 /**
@@ -62,13 +49,6 @@ export interface Category extends MicroCMSContent {
   color?: string;
   icon?: string; // アイコン名（Lucide React等）
   emoji?: string; // 絵文字
-  parentCategory?: Category; // 親カテゴリ（階層構造用）
-  // 統計情報
-  stats?: {
-    articlesCount: number;
-    popularityScore: number; // 人気度スコア
-  };
-  // 設定
   isPublished: boolean;
   sortOrder: number;
 }
@@ -81,14 +61,6 @@ export interface Tag extends MicroCMSContent {
   slug: string;
   description?: string;
   color?: string;
-  // 統計情報
-  stats?: {
-    articlesCount: number;
-    followersCount: number;
-    popularityScore: number;
-  };
-  // 関連タグ
-  relatedTags?: Tag[];
 }
 
 /**
@@ -101,13 +73,6 @@ export interface Series extends MicroCMSContent {
   emoji?: string;
   coverImage?: MicroCMSImage;
   author: Author;
-  // 統計情報
-  stats?: {
-    articlesCount: number;
-    totalViews: number;
-    likesCount: number;
-  };
-  // 設定
   isPublished: boolean;
   isCompleted: boolean;
 }
@@ -123,19 +88,6 @@ export interface ArticleSEO {
   canonicalUrl?: string;
   noindex?: boolean;
   nofollow?: boolean;
-}
-
-/**
- * 記事の統計情報
- */
-export interface ArticleStats {
-  viewCount: number;
-  likeCount: number;
-  stockCount: number; // ブックマーク数
-  commentCount: number;
-  shareCount: number;
-  readingTime: number; // 分単位
-  readingRate?: number; // 読了率（%）
 }
 
 /**
@@ -161,7 +113,6 @@ export interface Article extends MicroCMSContent {
 
   // 日時
   publishedAt?: string; // 公開日時
-  scheduledAt?: string; // 予約投稿日時
   lastEditedAt?: string; // 最終編集日時
 
   // 設定
@@ -172,15 +123,13 @@ export interface Article extends MicroCMSContent {
   // SEO
   seo?: ArticleSEO;
 
-  // 統計
-  stats?: ArticleStats;
-
   // 技術関連
   techStack?: string[]; // 使用技術
   difficulty?: 'beginner' | 'intermediate' | 'advanced'; // 難易度
+  readingTime?: number; // 推定読書時間（分）
 
   // 外部リンク
-  externalUrl?: string; // 外部記事URL（はてブ等）
+  externalUrl?: string; // 外部記事URL
   sourceUrl?: string; // ソースコードURL
   demoUrl?: string; // デモURL
 }
@@ -249,7 +198,7 @@ export interface ArticleSearchParams {
   page?: number;
 
   // ソート
-  orders?: string; // -publishedAt, -viewCount, -likeCount など
+  orders?: string; // -publishedAt, -createdAt など
 
   // 特殊フィルタ
   isPinned?: boolean;
@@ -270,7 +219,6 @@ export interface ArticleSearchParams {
  */
 export interface CategorySearchParams {
   q?: string;
-  parentCategoryId?: string;
   isPublished?: boolean;
   limit?: number;
   offset?: number;
@@ -283,7 +231,6 @@ export interface CategorySearchParams {
  */
 export interface TagSearchParams {
   q?: string;
-  popularityMin?: number;
   limit?: number;
   offset?: number;
   orders?: string;
@@ -315,40 +262,6 @@ export interface SearchResult<T> {
     authors?: Array<{ author: Author; count: number }>;
     types?: Array<{ type: ArticleType; count: number }>;
   };
-}
-
-/**
- * 人気記事の集計結果
- */
-export interface PopularArticles {
-  daily: Article[];
-  weekly: Article[];
-  monthly: Article[];
-  allTime: Article[];
-}
-
-/**
- * トレンド情報
- */
-export interface TrendingContent {
-  articles: Article[];
-  tags: Tag[];
-  categories: Category[];
-  authors: Author[];
-}
-
-/**
- * 統計情報サマリー
- */
-export interface StatsSummary {
-  totalArticles: number;
-  totalAuthors: number;
-  totalViews: number;
-  totalLikes: number;
-  averageReadingTime: number;
-  topCategories: Array<{ category: Category; count: number }>;
-  topTags: Array<{ tag: Tag; count: number }>;
-  activeAuthors: Author[];
 }
 
 /**

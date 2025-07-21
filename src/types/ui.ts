@@ -18,14 +18,12 @@ export type SortField =
   | 'createdAt'
   | 'updatedAt'
   | 'title'
-  | 'viewCount'
-  | 'likeCount'
   | 'readingTime';
 
 /**
  * 記事表示モード
  */
-export type ArticleDisplayMode = 'card' | 'list' | 'grid' | 'magazine';
+export type ArticleDisplayMode = 'card' | 'list' | 'grid';
 
 /**
  * 記事フィルタ状態
@@ -61,7 +59,6 @@ export interface ArticleListSettings {
   showAuthor: boolean;
   showCategory: boolean;
   showTags: boolean;
-  showStats: boolean;
   showReadingTime: boolean;
 }
 
@@ -90,7 +87,7 @@ export interface PaginationSettings {
  */
 export interface ModalState {
   isOpen: boolean;
-  type?: 'share' | 'bookmark' | 'report' | 'delete' | 'edit';
+  type?: 'share' | 'delete' | 'edit';
   data?: unknown;
 }
 
@@ -133,16 +130,9 @@ export interface ThemeSettings {
 export interface UserSettings {
   theme: ThemeSettings;
   article: ArticleListSettings;
-  notifications: {
-    email: boolean;
-    push: boolean;
-    newArticles: boolean;
-    popularArticles: boolean;
-  };
   privacy: {
     showEmail: boolean;
     showActivity: boolean;
-    allowFollow: boolean;
   };
 }
 
@@ -155,11 +145,8 @@ export interface ArticleCardProps {
   showAuthor?: boolean;
   showCategory?: boolean;
   showTags?: boolean;
-  showStats?: boolean;
   showExcerpt?: boolean;
   onClick?: (article: Article) => void;
-  onLike?: (article: Article) => void;
-  onBookmark?: (article: Article) => void;
   onShare?: (article: Article) => void;
 }
 
@@ -215,22 +202,6 @@ export interface NavigationItem {
   icon?: string;
   isActive?: boolean;
   children?: NavigationItem[];
-  badge?: string | number;
-}
-
-/**
- * 統計表示用のメトリクス
- */
-export interface MetricDisplay {
-  label: string;
-  value: number | string;
-  unit?: string;
-  change?: {
-    value: number;
-    type: 'increase' | 'decrease' | 'neutral';
-    period: string;
-  };
-  format?: 'number' | 'percentage' | 'duration' | 'currency';
 }
 
 /**

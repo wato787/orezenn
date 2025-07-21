@@ -8,14 +8,11 @@ import type {
   CategoriesResponse,
   Category,
   CategorySearchParams,
-  PopularArticles,
   Series,
   SeriesResponse,
-  StatsSummary,
   Tag,
   TagSearchParams,
-  TagsResponse,
-  TrendingContent
+  TagsResponse
 } from '../types/api';
 
 // 環境変数のバリデーション
@@ -126,10 +123,10 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
 
   // 読書時間範囲
   if (params.minReadingTime) {
-    filters.push(`stats.readingTime[greater_than]${params.minReadingTime}`);
+    filters.push(`readingTime[greater_than]${params.minReadingTime}`);
   }
   if (params.maxReadingTime) {
-    filters.push(`stats.readingTime[less_than]${params.maxReadingTime}`);
+    filters.push(`readingTime[less_than]${params.maxReadingTime}`);
   }
 
   if (filters.length > 0) {
@@ -203,9 +200,6 @@ export const fetchCategories = async (params?: CategorySearchParams): Promise<Ca
   if (params?.orders) queries.orders = params.orders;
 
   const filters: string[] = [];
-  if (params?.parentCategoryId) {
-    filters.push(`parentCategory[equals]${params.parentCategoryId}`);
-  }
   if (params?.isPublished !== undefined) {
     filters.push(`isPublished[equals]${params.isPublished}`);
   }
@@ -250,15 +244,6 @@ export const fetchTags = async (params?: TagSearchParams): Promise<TagsResponse>
   if (params?.limit) queries.limit = params.limit;
   if (params?.offset) queries.offset = params.offset;
   if (params?.orders) queries.orders = params.orders;
-
-  const filters: string[] = [];
-  if (params?.popularityMin) {
-    filters.push(`stats.popularityScore[greater_than]${params.popularityMin}`);
-  }
-
-  if (filters.length > 0) {
-    queries.filters = filters.join('[and]');
-  }
 
   return fetchFromMicroCMS<TagsResponse>('tags', queries);
 };
@@ -347,121 +332,20 @@ export const fetchSeriesBySlug = async (slug: string): Promise<Series> => {
 };
 
 /**
- * 人気記事取得
- */
-export const fetchPopularArticles = async (): Promise<PopularArticles> => {
-  const now = new Date();
-  const oneDay = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const oneWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const oneMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-  const [daily, weekly, monthly, allTime] = await Promise.all([
-    fetchArticles({
-      publishedAfter: oneDay.toISOString().split('T')[0],
-      orders: '-stats.viewCount',
-      limit: 10,
-    }),
-    fetchArticles({
-      publishedAfter: oneWeek.toISOString().split('T')[0],
-      orders: '-stats.viewCount',
-      limit: 10,
-    }),
-    fetchArticles({
-      publishedAfter: oneMonth.toISOString().split('T')[0],
-      orders: '-stats.viewCount',
-      limit: 10,
-    }),
-    fetchArticles({
-      orders: '-stats.viewCount',
-      limit: 10,
-    }),
-  ]);
-
-  return {
-    daily: daily.contents,
-    weekly: weekly.contents,
-    monthly: monthly.contents,
-    allTime: allTime.contents,
-  };
-};
-
-/**
- * トレンドコンテンツ取得
- */
-export const fetchTrendingContent = async (): Promise<TrendingContent> => {
-  const [articles, tags, categories, authors] = await Promise.all([
-    fetchArticles({
-      orders: '-stats.viewCount',
-      limit: 20,
-    }),
-    fetchTags({
-      orders: '-stats.popularityScore',
-      limit: 10,
-    }),
-    fetchCategories({
-      orders: '-stats.articlesCount',
-      limit: 10,
-    }),
-    fetchAuthors({
-      orders: '-stats.totalViews',
-      limit: 10,
-    }),
-  ]);
-
-  return {
-    articles: articles.contents,
-    tags: tags.contents,
-    categories: categories.contents,
-    authors: authors.contents,
-  };
-};
-
-/**
- * 統計サマリー取得（実際の実装では集計APIを使用）
- */
-export const fetchStatsSummary = async (): Promise<StatsSummary> => {
-  // 注意: これは簡易実装です。実際のプロダクションでは
-  // microCMSの集計機能やサーバーサイドAPIを使用してください
-  const [articles, authors, categories, tags] = await Promise.all([
-    fetchArticles({ limit: 1 }), // 総数のみ取得
-    fetchAuthors({ limit: 1 }),
-    fetchCategories({ limit: 10, orders: '-stats.articlesCount' }),
-    fetchTags({ limit: 10, orders: '-stats.popularityScore' }),
-  ]);
-
-  return {
-    totalArticles: articles.totalCount,
-    totalAuthors: authors.totalCount,
-    totalViews: 0, // 実装必要
-    totalLikes: 0, // 実装必要
-    averageReadingTime: 0, // 実装必要
-    topCategories: categories.contents.map(cat => ({
-      category: cat,
-      count: cat.stats?.articlesCount || 0
-    })),
-    topTags: tags.contents.map(tag => ({
-      tag,
-      count: tag.stats?.articlesCount || 0
-    })),
-    activeAuthors: authors.contents,
-  };
-};
-
-/**
  * 関連記事取得
  */
 export const fetchRelatedArticles = async (
   articleId: string,
   limit: number = 5
 ): Promise<Article[]> => {
-  // 同じカテゴリやタグの記事を取得（簡易実装）
+  // 同じカテゴリやタグの記事を取得
   const article = await fetchArticle(articleId);
 
   const relatedByCategory = await fetchArticles({
     categoryId: article.category.id,
     filters: [`id[not_equals]${articleId}`],
     limit: Math.ceil(limit / 2),
-    orders: '-stats.viewCount',
+    orders: '-publishedAt',
   });
 
   if (article.tags.length > 0) {
@@ -469,7 +353,7 @@ export const fetchRelatedArticles = async (
       tagId: article.tags[0].id,
       filters: [`id[not_equals]${articleId}`],
       limit: Math.ceil(limit / 2),
-      orders: '-stats.viewCount',
+      orders: '-publishedAt',
     });
 
     // 重複除去して結合
@@ -484,6 +368,19 @@ export const fetchRelatedArticles = async (
   }
 
   return relatedByCategory.contents;
+};
+
+/**
+ * 最新記事取得
+ */
+export const fetchLatestArticles = async (limit: number = 10): Promise<Article[]> => {
+  const response = await fetchArticles({
+    status: 'published',
+    orders: '-publishedAt',
+    limit,
+  });
+
+  return response.contents;
 };
 
 /**
