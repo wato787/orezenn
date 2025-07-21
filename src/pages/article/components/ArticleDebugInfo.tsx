@@ -1,15 +1,13 @@
 import type { Article } from "@/types/api";
 
 interface ArticleDebugInfoProps {
-  slug: string;
-  isId: boolean;
+  id: string;
   article: Article;
   error?: Error | null;
 }
 
 export const ArticleDebugInfo = ({
-  slug,
-  isId,
+  id,
   article,
   error,
 }: ArticleDebugInfoProps) => {
@@ -22,10 +20,7 @@ export const ArticleDebugInfo = ({
       <summary className="cursor-pointer font-medium">デバッグ情報</summary>
       <div className="mt-2 space-y-2 text-sm">
         <div>
-          <strong>URL Slug:</strong> {slug}
-        </div>
-        <div>
-          <strong>Is ID Pattern:</strong> {isId ? "Yes" : "No"}
+          <strong>URL ID:</strong> {id}
         </div>
         <div>
           <strong>Article ID:</strong> {article.id}

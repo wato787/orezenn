@@ -1,6 +1,5 @@
 import {
   fetchArticle,
-  fetchArticleBySlug,
   fetchArticles,
   fetchLatestArticles,
   fetchRelatedArticles
@@ -21,9 +20,7 @@ export const createArticlesQueryKey = (params?: ArticleSearchParams) =>
 export const createArticleQueryKey = (id: string) =>
   ['articles', 'detail', id] as const;
 
-// スラッグベース記事詳細のクエリキー生成
-export const createArticleBySlugQueryKey = (slug: string) =>
-  ['articles', 'slug', slug] as const;
+
 
 // 関連記事のクエリキー生成
 export const createRelatedArticlesQueryKey = (articleId: string, limit?: number) =>
@@ -65,26 +62,7 @@ export const useArticle = (
   });
 };
 
-/**
- * 記事詳細取得フック（スラッグ指定）
- */
-export const useArticleBySlug = (
-  slug: string,
-  options?: Omit<UseQueryOptions<Article, ApiError>, 'queryKey' | 'queryFn'>
-) => {
-  return useQuery({
-    queryKey: createArticleBySlugQueryKey(slug),
-    queryFn: () => fetchArticleBySlug(slug),
-    staleTime: 10 * 60 * 1000, // 10分
-    enabled: Boolean(slug), // スラッグが存在する場合のみクエリ実行
-    retry: (failureCount, error) => {
-      // 404エラーの場合はリトライしない
-      if ((error as ApiError)?.status === 404) return false;
-      return failureCount < 2;
-    },
-    ...options,
-  });
-};
+
 
 /**
  * 関連記事取得フック
@@ -183,16 +161,9 @@ export const useArticlePrefetch = () => {
     staleTime: 10 * 60 * 1000,
   });
 
-  const prefetchArticleBySlug = (slug: string) => ({
-    queryKey: createArticleBySlugQueryKey(slug),
-    queryFn: () => fetchArticleBySlug(slug),
-    staleTime: 10 * 60 * 1000,
-  });
-
   return {
     prefetchArticles,
     prefetchArticle,
-    prefetchArticleBySlug,
   };
 };
 

@@ -4,7 +4,7 @@ import { MarkdownRenderer } from "@/components/markdown";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useArticle, useArticleBySlug, useRelatedArticles } from "@/hooks";
+import { useArticle, useRelatedArticles } from "@/hooks";
 import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
@@ -19,20 +19,13 @@ import {
 export const ArticleDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
 
-  // slugが存在しない場合は記事一覧へリダイレクト
+  // IDが存在しない場合は記事一覧へリダイレクト
   if (!slug) {
     return <Navigate to="/articles" replace />;
   }
 
-  // slugがIDパターン（microCMSのID形式）かどうかを判定
-  const isId = /^[a-z0-9_-]{12}$/.test(slug);
-
-  // 適切なフックを使用
-  const bySlug = useArticleBySlug(slug, { enabled: !isId });
-  const byId = useArticle(slug, { enabled: isId });
-
-  // 使用する結果を選択
-  const { data: article, isPending, error, refetch } = isId ? byId : bySlug;
+  // IDで記事を取得
+  const { data: article, isPending, error, refetch } = useArticle(slug);
 
   const { data: relatedArticles, isPending: relatedPending } =
     useRelatedArticles(article?.id || "", 4, {
@@ -97,8 +90,7 @@ export const ArticleDetailPage = () => {
 
         {/* デバッグ情報 */}
         <ArticleDebugInfo
-          slug={slug}
-          isId={isId}
+          id={slug}
           article={article}
           error={error as Error | null}
         />

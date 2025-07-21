@@ -1,7 +1,6 @@
 import {
   fetchTag,
-  fetchTagBySlug,
-  fetchTags
+  fetchTags,
 } from '@/lib/microcms';
 import type {
   ApiError,
@@ -19,9 +18,7 @@ export const createTagsQueryKey = (params?: TagSearchParams) =>
 export const createTagQueryKey = (id: string) =>
   ['tags', 'detail', id] as const;
 
-// スラッグベースタグ詳細のクエリキー生成
-export const createTagBySlugQueryKey = (slug: string) =>
-  ['tags', 'slug', slug] as const;
+
 
 /**
  * タグ一覧取得フック
@@ -55,26 +52,7 @@ export const useTag = (
   });
 };
 
-/**
- * タグ詳細取得フック（スラッグ指定）
- */
-export const useTagBySlug = (
-  slug: string,
-  options?: Omit<UseQueryOptions<Tag, ApiError>, 'queryKey' | 'queryFn'>
-) => {
-  return useQuery({
-    queryKey: createTagBySlugQueryKey(slug),
-    queryFn: () => fetchTagBySlug(slug),
-    staleTime: 20 * 60 * 1000, // 20分
-    enabled: Boolean(slug),
-    retry: (failureCount, error) => {
-      // 404エラーの場合はリトライしない
-      if ((error as ApiError)?.status === 404) return false;
-      return failureCount < 2;
-    },
-    ...options,
-  });
-};
+
 
 /**
  * 人気タグ一覧取得フック
@@ -128,16 +106,11 @@ export const useTagPrefetch = () => {
     staleTime: 20 * 60 * 1000,
   });
 
-  const prefetchTagBySlug = (slug: string) => ({
-    queryKey: createTagBySlugQueryKey(slug),
-    queryFn: () => fetchTagBySlug(slug),
-    staleTime: 20 * 60 * 1000,
-  });
+
 
   return {
     prefetchTags,
     prefetchTag,
-    prefetchTagBySlug,
   };
 };
 

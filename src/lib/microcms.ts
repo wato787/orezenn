@@ -175,25 +175,7 @@ export const fetchArticle = async (id: string, queries?: MicroCMSQueries): Promi
   return fetchFromMicroCMS<Article>(`articles/${id}`, queries);
 };
 
-/**
- * スラッグから記事を取得
- */
-export const fetchArticleBySlug = async (slug: string): Promise<Article> => {
-  // 直接microCMSクライアントを使用してスラッグでフィルタリング
-  const queries: MicroCMSQueries = {
-    filters: `slug[equals]${slug}`,
-    limit: 1,
-    depth: 2, // 関連データも取得
-  };
 
-  const response = await fetchFromMicroCMS<ArticlesResponse>('articles', queries);
-
-  if (response.contents.length === 0) {
-    throw new Error(`記事が見つかりません: ${slug}`);
-  }
-
-  return response.contents[0];
-};
 
 /**
  * カテゴリ一覧取得用のヘルパー関数
@@ -225,21 +207,7 @@ export const fetchCategory = async (id: string): Promise<Category> => {
   return fetchFromMicroCMS<Category>(`categories/${id}`);
 };
 
-/**
- * スラッグからカテゴリを取得
- */
-export const fetchCategoryBySlug = async (slug: string): Promise<Category> => {
-  const response = await fetchCategories({
-    filters: [`slug[equals]${slug}`],
-    limit: 1,
-  });
 
-  if (response.contents.length === 0) {
-    throw new Error(`カテゴリが見つかりません: ${slug}`);
-  }
-
-  return response.contents[0];
-};
 
 /**
  * タグ一覧取得用のヘルパー関数
@@ -262,21 +230,7 @@ export const fetchTag = async (id: string): Promise<Tag> => {
   return fetchFromMicroCMS<Tag>(`tags/${id}`);
 };
 
-/**
- * スラッグからタグを取得
- */
-export const fetchTagBySlug = async (slug: string): Promise<Tag> => {
-  const response = await fetchTags({
-    filters: [`slug[equals]${slug}`],
-    limit: 1,
-  });
 
-  if (response.contents.length === 0) {
-    throw new Error(`タグが見つかりません: ${slug}`);
-  }
-
-  return response.contents[0];
-};
 
 /**
  * 作成者一覧取得
@@ -292,21 +246,7 @@ export const fetchAuthor = async (id: string): Promise<Author> => {
   return fetchFromMicroCMS<Author>(`authors/${id}`);
 };
 
-/**
- * ユーザー名から作成者を取得
- */
-export const fetchAuthorByUsername = async (username: string): Promise<Author> => {
-  const response = await fetchAuthors({
-    filters: `username[equals]${username}`,
-    limit: 1,
-  });
 
-  if (response.contents.length === 0) {
-    throw new Error(`作成者が見つかりません: ${username}`);
-  }
-
-  return response.contents[0];
-};
 
 /**
  * シリーズ一覧取得
@@ -322,21 +262,7 @@ export const fetchSeriesById = async (id: string): Promise<Series> => {
   return fetchFromMicroCMS<Series>(`series/${id}`);
 };
 
-/**
- * スラッグからシリーズを取得
- */
-export const fetchSeriesBySlug = async (slug: string): Promise<Series> => {
-  const response = await fetchSeries({
-    filters: `slug[equals]${slug}`,
-    limit: 1,
-  });
 
-  if (response.contents.length === 0) {
-    throw new Error(`シリーズが見つかりません: ${slug}`);
-  }
-
-  return response.contents[0];
-};
 
 /**
  * 関連記事取得

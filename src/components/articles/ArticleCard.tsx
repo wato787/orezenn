@@ -58,10 +58,7 @@ export const ArticleCard = ({
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <Link
-                  to={`/articles/${article.slug || article.id}`}
-                  className="group"
-                >
+                <Link to={`/articles/${article.id}`} className="group">
                   <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
                     {article.emoji && (
                       <span className="mr-2">{article.emoji}</span>
@@ -88,10 +85,7 @@ export const ArticleCard = ({
               </div>
 
               {article.eyecatch && (
-                <Link
-                  to={`/articles/${article.slug}`}
-                  className="flex-shrink-0"
-                >
+                <Link to={`/articles/${article.id}`} className="flex-shrink-0">
                   <img
                     src={article.eyecatch.url}
                     alt={article.title}
@@ -108,7 +102,7 @@ export const ArticleCard = ({
     return (
       <>
         {article.eyecatch && (
-          <Link to={`/articles/${article.slug || article.id}`}>
+          <Link to={`/articles/${article.id}`}>
             <div className="aspect-video w-full overflow-hidden rounded-t-lg">
               <img
                 src={article.eyecatch.url}
@@ -121,10 +115,7 @@ export const ArticleCard = ({
 
         <CardHeader className="space-y-3">
           <div>
-            <Link
-              to={`/articles/${article.slug || article.id}`}
-              className="group"
-            >
+            <Link to={`/articles/${article.id}`} className="group">
               <h3 className="font-bold text-xl line-clamp-2 group-hover:text-primary transition-colors">
                 {article.emoji && <span className="mr-2">{article.emoji}</span>}
                 {article.title}

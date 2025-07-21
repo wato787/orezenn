@@ -1,7 +1,6 @@
 import {
   fetchSeries,
   fetchSeriesById,
-  fetchSeriesBySlug
 } from '@/lib/microcms';
 import type {
   ApiError,
@@ -19,9 +18,7 @@ export const createSeriesQueryKey = (params?: MicroCMSQueries) =>
 export const createSeriesDetailQueryKey = (id: string) =>
   ['series', 'detail', id] as const;
 
-// スラッグベースシリーズ詳細のクエリキー生成
-export const createSeriesBySlugQueryKey = (slug: string) =>
-  ['series', 'slug', slug] as const;
+
 
 /**
  * シリーズ一覧取得フック
@@ -55,26 +52,7 @@ export const useSeriesById = (
   });
 };
 
-/**
- * シリーズ詳細取得フック（スラッグ指定）
- */
-export const useSeriesBySlug = (
-  slug: string,
-  options?: Omit<UseQueryOptions<Series, ApiError>, 'queryKey' | 'queryFn'>
-) => {
-  return useQuery({
-    queryKey: createSeriesBySlugQueryKey(slug),
-    queryFn: () => fetchSeriesBySlug(slug),
-    staleTime: 30 * 60 * 1000, // 30分
-    enabled: Boolean(slug),
-    retry: (failureCount, error) => {
-      // 404エラーの場合はリトライしない
-      if ((error as ApiError)?.status === 404) return false;
-      return failureCount < 2;
-    },
-    ...options,
-  });
-};
+
 
 /**
  * 公開済みシリーズ一覧取得フック
@@ -167,16 +145,11 @@ export const useSeriesPrefetch = () => {
     staleTime: 30 * 60 * 1000,
   });
 
-  const prefetchSeriesBySlug = (slug: string) => ({
-    queryKey: createSeriesBySlugQueryKey(slug),
-    queryFn: () => fetchSeriesBySlug(slug),
-    staleTime: 30 * 60 * 1000,
-  });
+
 
   return {
     prefetchSeries,
     prefetchSeriesById,
-    prefetchSeriesBySlug,
   };
 };
 

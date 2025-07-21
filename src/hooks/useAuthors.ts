@@ -1,7 +1,6 @@
 import {
   fetchAuthor,
-  fetchAuthorByUsername,
-  fetchAuthors
+  fetchAuthors,
 } from '@/lib/microcms';
 import type {
   ApiError,
@@ -19,9 +18,7 @@ export const createAuthorsQueryKey = (params?: MicroCMSQueries) =>
 export const createAuthorQueryKey = (id: string) =>
   ['authors', 'detail', id] as const;
 
-// ユーザー名ベース作成者詳細のクエリキー生成
-export const createAuthorByUsernameQueryKey = (username: string) =>
-  ['authors', 'username', username] as const;
+
 
 /**
  * 作成者一覧取得フック
@@ -58,23 +55,7 @@ export const useAuthor = (
 /**
  * 作成者詳細取得フック（ユーザー名指定）
  */
-export const useAuthorByUsername = (
-  username: string,
-  options?: Omit<UseQueryOptions<Author, ApiError>, 'queryKey' | 'queryFn'>
-) => {
-  return useQuery({
-    queryKey: createAuthorByUsernameQueryKey(username),
-    queryFn: () => fetchAuthorByUsername(username),
-    staleTime: 30 * 60 * 1000, // 30分
-    enabled: Boolean(username),
-    retry: (failureCount, error) => {
-      // 404エラーの場合はリトライしない
-      if ((error as ApiError)?.status === 404) return false;
-      return failureCount < 2;
-    },
-    ...options,
-  });
-};
+
 
 /**
  * 公開済み作成者一覧取得フック
@@ -129,16 +110,11 @@ export const useAuthorPrefetch = () => {
     staleTime: 30 * 60 * 1000,
   });
 
-  const prefetchAuthorByUsername = (username: string) => ({
-    queryKey: createAuthorByUsernameQueryKey(username),
-    queryFn: () => fetchAuthorByUsername(username),
-    staleTime: 30 * 60 * 1000,
-  });
+
 
   return {
     prefetchAuthors,
     prefetchAuthor,
-    prefetchAuthorByUsername,
   };
 };
 

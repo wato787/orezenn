@@ -20,9 +20,7 @@ export const RelatedArticles = ({
       <h2 className="text-2xl font-bold">関連記事</h2>
 
       {isPending ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ArticleListLoading count={4} />
-        </div>
+        <ArticleListLoading count={4} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {articles.map((article) => (
