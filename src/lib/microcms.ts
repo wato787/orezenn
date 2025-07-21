@@ -91,6 +91,9 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
   if (params.categoryId) {
     filters.push(`category[equals]${params.categoryId}`);
   }
+  if (params.categorySlug) {
+    filters.push(`category.slug[equals]${params.categorySlug}`);
+  }
   if (params.tagId) {
     filters.push(`tags[contains]${params.tagId}`);
   }
@@ -161,7 +164,7 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
  * 記事一覧取得用のヘルパー関数
  */
 export const fetchArticles = async (params?: ArticleSearchParams): Promise<ArticlesResponse> => {
-  const queries = params ? buildMicroCMSQueries(params) : {};
+  const queries = buildMicroCMSQueries(params || {});
   return fetchFromMicroCMS<ArticlesResponse>('articles', queries);
 };
 

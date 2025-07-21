@@ -1,5 +1,5 @@
-import { ArticleList } from '@/components/articles';
 import { Layout } from '@/components/layout/Layout';
+import { ArticleList } from '@/components/articles';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -16,11 +16,11 @@ const App = () => {
   return (
     <Layout>
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/articles' element={<ArticleList />} />
-        <Route path='/articles/:slug' element={<ArticleDetailPage />} />
-        <Route path='/categories' element={<CategoriesPage />} />
-        <Route path='*' element={<NotFoundPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/articles" element={<ArticleList />} />
+        <Route path="/articles/:slug" element={<ArticleDetailPage />} />
+        <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>
   );
