@@ -1,3 +1,4 @@
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { ChevronRight } from "lucide-react";
 
 export const ArticleDetailSkeleton = () => {
@@ -6,34 +7,36 @@ export const ArticleDetailSkeleton = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* パンくずリスト スケルトン */}
         <div className="flex items-center gap-2 text-sm">
-          <div className="h-4 w-16 bg-muted rounded animate-pulse" />
+          <Skeleton variant="text" size="sm" width="64px" />
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          <div className="h-4 w-20 bg-muted rounded animate-pulse" />
+          <Skeleton variant="text" size="sm" width="80px" />
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+          <Skeleton variant="text" size="sm" width="128px" />
         </div>
 
         {/* 記事ヘッダー スケルトン */}
         <div className="space-y-4">
-          <div className="h-10 w-3/4 bg-muted rounded animate-pulse" />
+          <Skeleton variant="text" size="xl" width="75%" height="40px" />
           <div className="flex items-center gap-4">
-            <div className="h-4 w-24 bg-muted rounded animate-pulse" />
-            <div className="h-4 w-20 bg-muted rounded animate-pulse" />
-            <div className="h-4 w-16 bg-muted rounded animate-pulse" />
+            <Skeleton variant="text" size="sm" width="96px" />
+            <Skeleton variant="text" size="sm" width="80px" />
+            <Skeleton variant="text" size="sm" width="64px" />
           </div>
           <div className="flex gap-2">
-            <div className="h-6 w-16 bg-muted rounded-full animate-pulse" />
-            <div className="h-6 w-20 bg-muted rounded-full animate-pulse" />
+            <Skeleton variant="rounded" height="24px" width="64px" />
+            <Skeleton variant="rounded" height="24px" width="80px" />
           </div>
         </div>
 
         {/* コンテンツ スケルトン */}
         <div className="space-y-4">
-          <div className="h-4 w-full bg-muted rounded animate-pulse" />
-          <div className="h-4 w-5/6 bg-muted rounded animate-pulse" />
-          <div className="h-4 w-4/5 bg-muted rounded animate-pulse" />
-          <div className="h-4 w-full bg-muted rounded animate-pulse" />
-          <div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
+          <SkeletonText lines={5} />
+          <div className="space-y-3">
+            <Skeleton variant="rounded" height="200px" width="100%" />
+            <SkeletonText lines={3} />
+            <Skeleton variant="rounded" height="150px" width="100%" />
+            <SkeletonText lines={4} />
+          </div>
         </div>
       </div>
     </div>

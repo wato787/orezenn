@@ -1,36 +1,42 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AlertCircle, FileText, Loader2, Search } from "lucide-react";
+import { SectionLoadingSpinner } from "@/components/ui/loading-spinner";
+import {
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonText,
+} from "@/components/ui/skeleton";
+import { AlertCircle, FileText, Search } from "lucide-react";
 
 /**
  * 記事カードのスケルトンコンポーネント
  */
 export const ArticleCardSkeleton = () => (
-  <Card className="animate-pulse">
-    <div className="aspect-video w-full bg-muted rounded-t-lg" />
+  <Card>
+    <Skeleton variant="rounded" height="200px" className="rounded-t-lg" />
     <CardHeader className="space-y-3">
       <div className="space-y-2">
-        <div className="h-4 bg-muted rounded w-3/4" />
-        <div className="h-4 bg-muted rounded w-1/2" />
+        <SkeletonText size="lg" width="75%" />
+        <SkeletonText size="md" width="50%" />
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="h-3 bg-muted rounded w-24" />
-          <div className="h-3 bg-muted rounded w-16" />
+          <Skeleton variant="text" size="sm" width="96px" />
+          <Skeleton variant="text" size="sm" width="64px" />
         </div>
-        <div className="h-6 bg-muted rounded-full w-20" />
+        <Skeleton variant="rounded" height="24px" width="80px" />
       </div>
     </CardHeader>
     <CardContent className="pt-0">
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-muted rounded-full" />
-          <div className="h-3 bg-muted rounded w-24" />
+          <SkeletonAvatar size="sm" />
+          <Skeleton variant="text" size="sm" width="96px" />
         </div>
         <div className="flex gap-2">
-          <div className="h-6 bg-muted rounded w-16" />
-          <div className="h-6 bg-muted rounded w-20" />
-          <div className="h-6 bg-muted rounded w-18" />
+          <Skeleton variant="rounded" height="24px" width="64px" />
+          <Skeleton variant="rounded" height="24px" width="80px" />
+          <Skeleton variant="rounded" height="24px" width="72px" />
         </div>
       </div>
     </CardContent>
@@ -46,12 +52,7 @@ interface ArticleListLoadingProps {
 
 export const ArticleListLoading = ({ count = 6 }: ArticleListLoadingProps) => (
   <div className="space-y-6">
-    <div className="flex items-center justify-center py-4">
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        <span>記事を読み込み中...</span>
-      </div>
-    </div>
+    <SectionLoadingSpinner text="記事を読み込み中..." />
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, index) => (
@@ -142,18 +143,23 @@ export const ArticleListEmpty = ({
  * コンパクト表示用のスケルトン
  */
 export const ArticleCardSkeletonCompact = () => (
-  <Card className="animate-pulse">
+  <Card>
     <CardHeader className="pb-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0 space-y-2">
-          <div className="h-5 bg-muted rounded w-3/4" />
-          <div className="h-5 bg-muted rounded w-1/2" />
+          <SkeletonText size="lg" width="75%" />
+          <SkeletonText size="lg" width="50%" />
           <div className="flex items-center gap-4 mt-2">
-            <div className="h-3 bg-muted rounded w-24" />
-            <div className="h-3 bg-muted rounded w-16" />
+            <Skeleton variant="text" size="sm" width="96px" />
+            <Skeleton variant="text" size="sm" width="64px" />
           </div>
         </div>
-        <div className="w-20 h-16 bg-muted rounded-md flex-shrink-0" />
+        <Skeleton
+          variant="rounded"
+          width="80px"
+          height="64px"
+          className="flex-shrink-0"
+        />
       </div>
     </CardHeader>
   </Card>
@@ -166,12 +172,7 @@ export const ArticleListLoadingCompact = ({
   count = 8,
 }: ArticleListLoadingProps) => (
   <div className="space-y-4">
-    <div className="flex items-center justify-center py-4">
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span>読み込み中...</span>
-      </div>
-    </div>
+    <SectionLoadingSpinner text="読み込み中..." />
 
     <div className="space-y-3">
       {Array.from({ length: count }).map((_, index) => (

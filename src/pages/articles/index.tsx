@@ -4,7 +4,7 @@ import {
   ArticleListError,
   ArticleListLoading,
 } from "@/components/articles/ArticleListState";
-import { Pagination } from "@/components/ui/Pagination";
+import { Pagination } from "@/components/ui";
 import { useArticles } from "@/hooks";
 import type { ArticleSearchParams } from "@/types/api";
 import { useState } from "react";
