@@ -1,34 +1,34 @@
 // 記事関連フック
 export {
-  createArticleBySlugQueryKey, createArticleQueryKey, createArticlesQueryKey, createLatestArticlesQueryKey, createRelatedArticlesQueryKey, useArticle,
-  useArticleBySlug, useArticlePrefetch, useArticles, useInfiniteArticles, useLatestArticles, useRelatedArticles, useSearchArticles, type ArticleQueryInvalidation
+  createArticleQueryKey, createArticlesQueryKey, createLatestArticlesQueryKey, createRelatedArticlesQueryKey, useArticle,
+  useArticlePrefetch, useArticles, useInfiniteArticles, useLatestArticles, useRelatedArticles, useSearchArticles, type ArticleQueryInvalidation
 } from './useArticles';
 
 // カテゴリ関連フック
 export {
-  createCategoriesQueryKey, createCategoryBySlugQueryKey, createCategoryQueryKey, useCategories,
+  createCategoriesQueryKey, createCategoryQueryKey, useCategories,
   useCategory,
-  useCategoryBySlug, useCategoryPrefetch, usePublishedCategories, type CategoryQueryInvalidation
+  useCategoryPrefetch, usePublishedCategories, type CategoryQueryInvalidation
 } from './useCategories';
 
 // タグ関連フック
 export {
-  createTagBySlugQueryKey, createTagQueryKey, createTagsQueryKey, usePopularTags,
+  createTagQueryKey, createTagsQueryKey, usePopularTags,
   useSearchTags, useTag,
-  useTagBySlug, useTagPrefetch, useTags, type TagQueryInvalidation
+  useTagPrefetch, useTags, type TagQueryInvalidation
 } from './useTags';
 
 // 作成者関連フック
 export {
-  createAuthorByUsernameQueryKey, createAuthorQueryKey, createAuthorsQueryKey, useAuthor,
-  useAuthorByUsername, useAuthorPrefetch, useAuthors, usePublishedAuthors,
+  createAuthorQueryKey, createAuthorsQueryKey, useAuthor,
+  useAuthorPrefetch, useAuthors, usePublishedAuthors,
   useSearchAuthors, type AuthorQueryInvalidation
 } from './useAuthors';
 
 // シリーズ関連フック
 export {
-  createSeriesBySlugQueryKey, createSeriesDetailQueryKey, createSeriesQueryKey, useCompletedSeries, usePublishedSeries, useSearchSeries, useSeries, useSeriesByAuthor, useSeriesById,
-  useSeriesBySlug, useSeriesPrefetch, type SeriesQueryInvalidation
+  createSeriesDetailQueryKey, createSeriesQueryKey, useCompletedSeries, usePublishedSeries, useSearchSeries, useSeries, useSeriesByAuthor, useSeriesById,
+  useSeriesPrefetch, type SeriesQueryInvalidation
 } from './useSeries';
 
 // 型の再エクスポート
