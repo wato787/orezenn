@@ -113,11 +113,16 @@ VITE_MICROCMS_API_KEY=your-api-key
 pnpm dev
 ```
 
+### 開発状況の確認
+アプリケーションにアクセスすると、以下の動作確認ができます：
+- TanStack Query の動作テスト（Issue #1）
+- microCMS SDK の接続テスト（Issue #2）
+- 各技術スタックの導入状況確認
+
 ### 利用可能なスクリプト
 - `pnpm dev` - 開発サーバー起動 (http://localhost:5173)
 - `pnpm build` - プロダクションビルド
 - `pnpm preview` - ビルド結果のプレビュー
-- `pnpm lint` - ESLintチェック
 - `pnpm format` - Biomeフォーマット実行
 - `pnpm check` - Biome全体チェック
 - `pnpm check:fix` - 自動修正付きチェック
@@ -127,7 +132,7 @@ pnpm dev
 ### Phase 1: 基本ブログ機能 🏗️
 - [x] プロジェクト環境設定
 - [x] ルーティング設定
-- [ ] TanStack Query + microCMS SDK導入
+- [x] TanStack Query + microCMS SDK導入
 - [ ] 共通レイアウト作成
 - [ ] 記事一覧ページ（microCMS連携）
 - [ ] 記事詳細ページ（Markdownレンダリング）

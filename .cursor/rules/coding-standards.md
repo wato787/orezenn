@@ -1,0 +1,86 @@
+# コーディング規約
+
+## 📝 基本ルール
+
+### 関数定義
+- **必須**: アロー関数を使用する（function文は使わない）
+- **例**: 
+  ```typescript
+  // ✅ Good
+  const fetchData = async () => { ... }
+  
+  // ❌ Bad
+  function fetchData() { ... }
+  ```
+
+### 変数・定数命名
+- **必須**: camelCase（関数・変数）
+- **必須**: PascalCase（コンポーネント・型・インターフェース）
+- **必須**: UPPER_SNAKE_CASE（定数）
+
+```typescript
+// ✅ Good
+const userName = 'john';
+const MAX_RETRY_COUNT = 3;
+interface UserProfile { ... }
+const UserCard = () => { ... }
+
+// ❌ Bad
+const user_name = 'john';
+const maxretrycount = 3;
+interface userProfile { ... }
+```
+
+### インポート・エクスポート
+- **必須**: named exportを使用（default exportも併用可）
+- **必須**: 型インポートは`type`キーワードを使用
+- **推奨**: インポート順序：外部ライブラリ → 内部モジュール → 型定義
+
+```typescript
+// ✅ Good
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchArticles } from '../lib/microcms';
+import type { Article } from '../types/api';
+
+// ❌ Bad
+import { Article } from '../types/api'; // 型なのにtypeキーワードなし
+```
+
+## 🔧 Lint・Format
+
+### Biome設定
+- **必須**: Biomeを使用する（ESLintは使わない）
+- **コマンド**: 
+  - `pnpm check` - 全体チェック
+  - `pnpm format` - フォーマット実行
+  - `pnpm check:fix` - 自動修正
+
+### コミット前チェック
+- **必須**: `pnpm check`でエラーゼロを確認
+- **必須**: TypeScriptエラーをゼロにする
+
+## 📋 コメント・ドキュメント
+
+### JSDoc
+- **推奨**: 公開関数にはJSDocを記載
+- **必須**: 複雑な処理には説明コメント
+
+```typescript
+/**
+ * 記事一覧を取得する
+ * @param queries - 検索・フィルタ条件
+ * @returns 記事一覧のレスポンス
+ */
+export const fetchArticles = async (queries?: MicroCMSQueries): Promise<ArticlesResponse> => {
+  return fetchFromMicroCMS<ArticlesResponse>('articles', queries);
+};
+```
+
+### TODO コメント
+- **形式**: `// TODO: [Issue #番号] 説明`
+- **例**: `// TODO: [Issue #15] エラーハンドリング改善`
+
+---
+
+**最終更新**: 2024年7月 
