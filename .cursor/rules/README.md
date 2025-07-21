@@ -13,6 +13,7 @@
 - **[data-fetching.md](./data-fetching.md)** - TanStack Query・API呼び出しルール
 - **[microcms.md](./microcms.md)** - microCMS連携ルール
 - **[project-structure.md](./project-structure.md)** - ファイル・ディレクトリ構成ルール
+- **[git.md](./git.md)** - Git・コミットメッセージ規約
 
 ## 🔄 更新ルール
 
