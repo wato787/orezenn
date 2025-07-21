@@ -6,29 +6,29 @@ microCMSをヘッドレスCMSとして活用し、シンプルで高性能なブ
 ## ✨ 主要機能（2人用ブログ特化）
 
 ### 📝 記事閲覧
-- **記事一覧表示** - カード形式での記事一覧（ページネーション対応）
-- **記事詳細表示** - Markdownコンテンツのレンダリング
-- **高速表示** - TanStack Queryによる自動キャッシュ・最適化
-- **レスポンシブ対応** - PC・タブレット・スマホでの快適な閲覧
+- **記事一覧表示** - カード形式での記事一覧（ページネーション対応）✅
+- **記事詳細表示** - HTML/Markdownコンテンツのレンダリング ✅
+- **高速表示** - TanStack Queryによる自動キャッシュ・最適化 ✅
+- **レスポンシブ対応** - PC・タブレット・スマホでの快適な閲覧 ✅
 
 ### 🏷️ コンテンツ整理
-- **カテゴリ分類** - 技術分野ごとの記事分類（アイコン・色付き）
-- **タグシステム** - 細かいトピック分けのタグ付け
-- **シリーズ機能** - 関連記事のグループ化
-- **検索・フィルタ機能** - タイトル・内容・タグでの記事検索
-- **読書時間表示** - 記事の推定読書時間
+- **記事検索・フィルタ機能** - タイトル・内容での記事検索 ✅
+- **関連記事推薦** - 記事詳細ページでの関連記事表示 ✅
+- **読書時間表示** - 記事の推定読書時間 ✅
+- **カテゴリ分類** - 技術分野ごとの記事分類（予定）
+- **タグシステム** - 細かいトピック分けのタグ付け（予定）
 
 ### 📱 ユーザビリティ
-- **高速ページ遷移** - SPA方式でのスムーズな操作感
+- **高速ページ遷移** - SPA方式でのスムーズな操作感 ✅
+- **Skeleton UI** - 美しいローディング表示 ✅
+- **エラーハンドリング** - 適切なエラー表示・リトライ機能 ✅
 - **ダークモード** - 目に優しい夜間モード（予定）
-- **SEO最適化** - 検索エンジンフレンドリーな構造
-- **技術スタック表示** - 記事で使用した技術の明示
+- **SEO最適化** - 検索エンジンフレンドリーな構造（予定）
 
 ### ⚡ パフォーマンス
-- **自動キャッシュ** - 一度読み込んだ記事の高速表示
-- **関連記事推薦** - カテゴリ・タグベースの記事推薦
-- **画像最適化** - microCMSによる自動画像配信最適化
-- **コード分割** - 必要な部分のみの読み込み
+- **自動キャッシュ** - TanStack Queryによる高速データ取得 ✅
+- **画像最適化** - microCMSによる自動画像配信最適化 ✅
+- **コード分割** - React Routerによる必要な部分のみの読み込み ✅
 
 ## 🛠️ 技術スタック
 
@@ -47,33 +47,39 @@ microCMSをヘッドレスCMSとして活用し、シンプルで高性能なブ
 ### Markdown処理
 - **react-markdown** - Markdownレンダリング
 - **remark/rehype plugins** - Markdown拡張機能
-- **Prism.js** - シンタックスハイライト（予定）
+- **CSS Modules** - HTML コンテンツの詳細スタイリング
 
-### 開発ツール
-- **Biome** - Linter & Formatter
-- **ESLint** - コード品質チェック
-- **EditorConfig** - エディタ設定統一
+### 開発ツール・CI
+- **Biome** - 統合Linter & Formatter
+- **GitHub Actions** - 自動CI/CD（lint, format, type-check, build）
+- **date-fns** - 日付フォーマットライブラリ
+- **pnpm** - 高速パッケージマネージャー
 
 ## 📁 プロジェクト構成
 
 ```
 src/
-├── components/          # 再利用可能なコンポーネント
-│   ├── layout/         # Header, Footer, Layout
-│   ├── ui/             # Button, Card等の基本UI
-│   └── features/       # 記事表示等の機能別コンポーネント
-├── hooks/              # カスタムフック
-│   ├── api/           # microCMS API関連フック
-│   └── ui/            # UI状態管理フック
-├── types/              # TypeScript型定義
-│   ├── api.ts         # microCMS API型定義
-│   └── article.ts     # 記事データ型定義
-├── lib/                # ライブラリ設定
-│   ├── microcms.ts    # microCMS SDK設定
-│   └── query.ts       # TanStack Query設定
-├── utils/              # ユーティリティ関数
-├── pages/              # ページコンポーネント
-└── assets/             # 静的ファイル
+├── components/              # 再利用可能なコンポーネント
+│   ├── layout/             # Header, Footer, Layout
+│   ├── ui/                 # shadcn/ui ベースのUIコンポーネント
+│   ├── articles/           # 記事関連の共通コンポーネント
+│   └── markdown/           # Markdown/HTML レンダリング
+├── pages/                  # ページコンポーネント
+│   ├── article/            # 記事詳細ページ
+│   └── articles/           # 記事一覧ページ
+├── hooks/                  # カスタムフック
+│   └── useArticles.ts      # 記事取得フック
+├── types/                  # TypeScript型定義
+│   ├── api.ts             # microCMS API型定義
+│   └── ui.ts              # UI関連型定義
+├── lib/                    # ライブラリ設定
+│   ├── microcms.ts        # microCMS SDK設定
+│   ├── query.ts           # TanStack Query設定
+│   └── utils.ts           # shadcn/ui utilities
+├── utils/                  # ユーティリティ関数
+│   ├── cn.ts              # className utilities
+│   └── date.ts            # 日付フォーマット
+└── assets/                 # 静的ファイル
 ```
 
 ## 🚀 開発開始
@@ -88,13 +94,15 @@ src/
 2. 「記事」APIの作成（以下のフィールド推奨）
    ```
    - title: テキスト（記事タイトル）
-   - content: リッチエディタ（Markdown記事本文）
-   - slug: テキスト（URL用スラッグ）
+   - content: リッチエディタ（HTML記事本文）
+   - slug: テキスト（URL用スラッグ）※現在はID指定
    - publishedAt: 日時（公開日時）
    - category: コンテンツ参照（カテゴリ）
    - tags: 複数コンテンツ参照（タグ）
    - eyecatch: 画像（アイキャッチ画像）
    - excerpt: テキストエリア（記事概要）
+   - emoji: テキスト（記事絵文字）
+   - readingTime: 数値（読書時間）
    ```
 3. APIキーの取得（環境変数用）
 
@@ -114,51 +122,55 @@ VITE_MICROCMS_API_KEY=your-api-key
 pnpm dev
 ```
 
-### 開発状況の確認
-アプリケーションにアクセスすると、以下の動作確認ができます：
-- TanStack Query の動作テスト（Issue #1）
-- microCMS SDK の接続テスト（Issue #2）
-- 各技術スタックの導入状況確認
-
 ### 利用可能なスクリプト
-- `pnpm dev` - 開発サーバー起動 (http://localhost:5173)
-- `pnpm build` - プロダクションビルド
-- `pnpm preview` - ビルド結果のプレビュー
-- `pnpm format` - Biomeフォーマット実行
-- `pnpm check` - Biome全体チェック
-- `pnpm check:fix` - 自動修正付きチェック
+```bash
+# 開発
+pnpm dev              # 開発サーバー起動
+pnpm build            # プロダクションビルド
+pnpm preview          # ビルド結果のプレビュー
+
+# コード品質
+pnpm type-check       # TypeScript型チェック
+pnpm lint             # Biome lint実行
+pnpm format           # Biome format実行（書き込み）
+pnpm format:check     # Biome format チェック（書き込みなし）
+pnpm check            # Biome 全体チェック
+pnpm check:fix        # Biome 自動修正付きチェック
+```
 
 ## 🎯 開発ロードマップ
 
-### Phase 1: 基本ブログ機能 🏗️
+### Phase 1: 基本ブログ機能 ✅
 - [x] プロジェクト環境設定
 - [x] ルーティング設定
 - [x] TanStack Query + microCMS SDK導入
-- [ ] 共通レイアウト作成
-- [ ] 記事一覧ページ（microCMS連携）
-- [ ] 記事詳細ページ（Markdownレンダリング）
-- [ ] 基本的なローディング・エラー処理
+- [x] 共通レイアウト作成（Header, Footer, Layout）
+- [x] 記事一覧ページ（microCMS連携）
+- [x] 記事詳細ページ（HTML/Markdownレンダリング）
+- [x] Skeleton UI・ローディング改善
+- [x] 基本的なエラーハンドリング
+- [x] GitHub Actions CI設定
+- [x] コードベース整理・最適化
 
-### Phase 2: UX・パフォーマンス向上 ⚡
+### Phase 2: UX・パフォーマンス向上 🚧
 - [ ] 無限スクロール（useInfiniteQuery）
-- [ ] Skeleton UI・ローディング改善
-- [ ] 記事検索・フィルタリング
+- [ ] 記事検索・フィルタリング機能の拡張
 - [ ] カテゴリ・タグ機能
 - [ ] 記事のプリフェッチ機能
+- [ ] パフォーマンス監視
 
-### Phase 3: 高度な機能 ✨
+### Phase 3: 高度な機能 🔜
 - [ ] ダークモード切り替え
 - [ ] PWA対応（オフライン閲覧）
 - [ ] SEO最適化（メタタグ・OGP）
 - [ ] サイトマップ自動生成
 - [ ] Google Analytics連携
 
-### Phase 4: 運用・保守 🔧
+### Phase 4: 運用・保守 🔜
 - [ ] Error Boundary実装
-- [ ] パフォーマンス監視
-- [ ] キャッシュ戦略最適化
-- [ ] セキュリティ対応
+- [ ] セキュリティ強化
 - [ ] デプロイ自動化
+- [ ] パフォーマンス最適化
 
 ## 🌐 デプロイ
 
@@ -174,6 +186,20 @@ VITE_MICROCMS_SERVICE_DOMAIN=your-service-domain
 VITE_MICROCMS_API_KEY=your-api-key
 ```
 
+## 🔧 開発ガイドライン
+
+### コード品質
+- **Biome** による統一された lint・format ルール
+- **GitHub Actions** による自動CI実行
+- **TypeScript** による型安全性の確保
+- **TanStack Query** によるデータフェッチの統一
+
+### アーキテクチャ
+- **ID ベースルーティング** - slug ではなく記事IDでの直接アクセス
+- **コンポーネント分離** - ページ固有とグローバル共通の明確な分離
+- **CSS Modules** - HTML コンテンツの細かいスタイリング
+- **shadcn/ui** - 一貫したUIコンポーネント
+
 ## 📄 ライセンス
 
 MIT License
@@ -184,7 +210,7 @@ MIT License
 
 ---
 
-**現在のステータス**: 🏗️ 開発中 (Phase 1)  
+**現在のステータス**: ✅ Phase 1 完了 → 🚧 Phase 2 開始  
 **最終更新**: 2024年7月  
 **CMS**: microCMS  
-**主要技術**: React + TypeScript + TanStack Query + microCMS
+**主要技術**: React + TypeScript + TanStack Query + microCMS + Biome
