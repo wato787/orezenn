@@ -1,5 +1,22 @@
 import { createClient, type MicroCMSQueries } from 'microcms-js-sdk';
-import type { ArticlesResponse, CategoriesResponse } from '../types/api';
+import type {
+  Article,
+  ArticleSearchParams,
+  ArticlesResponse,
+  Author,
+  AuthorsResponse,
+  CategoriesResponse,
+  Category,
+  CategorySearchParams,
+  PopularArticles,
+  Series,
+  SeriesResponse,
+  StatsSummary,
+  Tag,
+  TagSearchParams,
+  TagsResponse,
+  TrendingContent
+} from '../types/api';
 
 // 環境変数のバリデーション
 const serviceDomain = import.meta.env.VITE_MICROCMS_SERVICE_DOMAIN;
@@ -34,27 +51,461 @@ export const fetchFromMicroCMS = async <T>(
     return response;
   } catch (error) {
     console.error(`microCMS API Error (${endpoint}):`, error);
+
+    // エラーの種類に応じて適切なメッセージ
+    if (error instanceof Error) {
+      const statusMatch = error.message.match(/status: (\d+)/);
+      const status = statusMatch ? parseInt(statusMatch[1]) : 0;
+
+      switch (status) {
+        case 404:
+          throw new Error('コンテンツが見つかりません');
+        case 401:
+          throw new Error('APIキーが無効です');
+        case 403:
+          throw new Error('このAPIへのアクセス権限がありません');
+        case 429:
+          throw new Error('リクエスト制限に達しました。しばらく時間をおいて再試行してください');
+        case 500:
+          throw new Error('microCMSサーバーでエラーが発生しました');
+        default:
+          throw new Error(`データの取得に失敗しました: ${endpoint}`);
+      }
+    }
+
     throw new Error(`データの取得に失敗しました: ${endpoint}`);
   }
 };
 
 /**
+ * 検索パラメータをmicroCMSクエリに変換
+ */
+const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
+  const queries: MicroCMSQueries = {};
+
+  // 基本検索
+  if (params.q) {
+    queries.q = params.q;
+  }
+
+  // フィルタリング
+  const filters: string[] = [];
+
+  if (params.categoryId) {
+    filters.push(`category[equals]${params.categoryId}`);
+  }
+  if (params.tagId) {
+    filters.push(`tags[contains]${params.tagId}`);
+  }
+  if (params.authorId) {
+    filters.push(`author[equals]${params.authorId}`);
+  }
+  if (params.type) {
+    filters.push(`type[equals]${params.type}`);
+  }
+  if (params.status) {
+    filters.push(`status[equals]${params.status}`);
+  }
+  if (params.difficulty) {
+    filters.push(`difficulty[equals]${params.difficulty}`);
+  }
+  if (params.isPinned !== undefined) {
+    filters.push(`isPinned[equals]${params.isPinned}`);
+  }
+  if (params.hasEyecatch !== undefined) {
+    filters.push(`eyecatch[${params.hasEyecatch ? 'exists' : 'not_exists'}]`);
+  }
+
+  // 日付範囲
+  if (params.publishedAfter) {
+    filters.push(`publishedAt[greater_than]${params.publishedAfter}`);
+  }
+  if (params.publishedBefore) {
+    filters.push(`publishedAt[less_than]${params.publishedBefore}`);
+  }
+
+  // 読書時間範囲
+  if (params.minReadingTime) {
+    filters.push(`stats.readingTime[greater_than]${params.minReadingTime}`);
+  }
+  if (params.maxReadingTime) {
+    filters.push(`stats.readingTime[less_than]${params.maxReadingTime}`);
+  }
+
+  if (filters.length > 0) {
+    queries.filters = filters.join('[and]');
+  }
+
+  // ページネーション
+  if (params.limit) {
+    queries.limit = params.limit;
+  }
+  if (params.offset) {
+    queries.offset = params.offset;
+  }
+
+  // ソート
+  if (params.orders) {
+    queries.orders = params.orders;
+  }
+
+  // フィールド選択
+  if (params.fields) {
+    queries.fields = params.fields.join(',');
+  }
+  if (params.depth) {
+    queries.depth = params.depth;
+  }
+
+  return queries;
+};
+
+/**
  * 記事一覧取得用のヘルパー関数
  */
-export const fetchArticles = async (queries?: MicroCMSQueries): Promise<ArticlesResponse> => {
+export const fetchArticles = async (params?: ArticleSearchParams): Promise<ArticlesResponse> => {
+  const queries = params ? buildMicroCMSQueries(params) : {};
   return fetchFromMicroCMS<ArticlesResponse>('articles', queries);
 };
 
 /**
  * 記事詳細取得用のヘルパー関数
  */
-export const fetchArticle = async (id: string, queries?: MicroCMSQueries) => {
-  return fetchFromMicroCMS(`articles/${id}`, queries);
+export const fetchArticle = async (id: string, queries?: MicroCMSQueries): Promise<Article> => {
+  return fetchFromMicroCMS<Article>(`articles/${id}`, queries);
+};
+
+/**
+ * スラッグから記事を取得
+ */
+export const fetchArticleBySlug = async (slug: string): Promise<Article> => {
+  const response = await fetchArticles({
+    filters: [`slug[equals]${slug}`],
+    limit: 1,
+  });
+
+  if (response.contents.length === 0) {
+    throw new Error(`記事が見つかりません: ${slug}`);
+  }
+
+  return response.contents[0];
 };
 
 /**
  * カテゴリ一覧取得用のヘルパー関数
  */
-export const fetchCategories = async (queries?: MicroCMSQueries): Promise<CategoriesResponse> => {
+export const fetchCategories = async (params?: CategorySearchParams): Promise<CategoriesResponse> => {
+  const queries: MicroCMSQueries = {};
+
+  if (params?.q) queries.q = params.q;
+  if (params?.limit) queries.limit = params.limit;
+  if (params?.offset) queries.offset = params.offset;
+  if (params?.orders) queries.orders = params.orders;
+
+  const filters: string[] = [];
+  if (params?.parentCategoryId) {
+    filters.push(`parentCategory[equals]${params.parentCategoryId}`);
+  }
+  if (params?.isPublished !== undefined) {
+    filters.push(`isPublished[equals]${params.isPublished}`);
+  }
+
+  if (filters.length > 0) {
+    queries.filters = filters.join('[and]');
+  }
+
   return fetchFromMicroCMS<CategoriesResponse>('categories', queries);
+};
+
+/**
+ * カテゴリ詳細取得
+ */
+export const fetchCategory = async (id: string): Promise<Category> => {
+  return fetchFromMicroCMS<Category>(`categories/${id}`);
+};
+
+/**
+ * スラッグからカテゴリを取得
+ */
+export const fetchCategoryBySlug = async (slug: string): Promise<Category> => {
+  const response = await fetchCategories({
+    filters: [`slug[equals]${slug}`],
+    limit: 1,
+  });
+
+  if (response.contents.length === 0) {
+    throw new Error(`カテゴリが見つかりません: ${slug}`);
+  }
+
+  return response.contents[0];
+};
+
+/**
+ * タグ一覧取得用のヘルパー関数
+ */
+export const fetchTags = async (params?: TagSearchParams): Promise<TagsResponse> => {
+  const queries: MicroCMSQueries = {};
+
+  if (params?.q) queries.q = params.q;
+  if (params?.limit) queries.limit = params.limit;
+  if (params?.offset) queries.offset = params.offset;
+  if (params?.orders) queries.orders = params.orders;
+
+  const filters: string[] = [];
+  if (params?.popularityMin) {
+    filters.push(`stats.popularityScore[greater_than]${params.popularityMin}`);
+  }
+
+  if (filters.length > 0) {
+    queries.filters = filters.join('[and]');
+  }
+
+  return fetchFromMicroCMS<TagsResponse>('tags', queries);
+};
+
+/**
+ * タグ詳細取得
+ */
+export const fetchTag = async (id: string): Promise<Tag> => {
+  return fetchFromMicroCMS<Tag>(`tags/${id}`);
+};
+
+/**
+ * スラッグからタグを取得
+ */
+export const fetchTagBySlug = async (slug: string): Promise<Tag> => {
+  const response = await fetchTags({
+    filters: [`slug[equals]${slug}`],
+    limit: 1,
+  });
+
+  if (response.contents.length === 0) {
+    throw new Error(`タグが見つかりません: ${slug}`);
+  }
+
+  return response.contents[0];
+};
+
+/**
+ * 作成者一覧取得
+ */
+export const fetchAuthors = async (queries?: MicroCMSQueries): Promise<AuthorsResponse> => {
+  return fetchFromMicroCMS<AuthorsResponse>('authors', queries);
+};
+
+/**
+ * 作成者詳細取得
+ */
+export const fetchAuthor = async (id: string): Promise<Author> => {
+  return fetchFromMicroCMS<Author>(`authors/${id}`);
+};
+
+/**
+ * ユーザー名から作成者を取得
+ */
+export const fetchAuthorByUsername = async (username: string): Promise<Author> => {
+  const response = await fetchAuthors({
+    filters: `username[equals]${username}`,
+    limit: 1,
+  });
+
+  if (response.contents.length === 0) {
+    throw new Error(`作成者が見つかりません: ${username}`);
+  }
+
+  return response.contents[0];
+};
+
+/**
+ * シリーズ一覧取得
+ */
+export const fetchSeries = async (queries?: MicroCMSQueries): Promise<SeriesResponse> => {
+  return fetchFromMicroCMS<SeriesResponse>('series', queries);
+};
+
+/**
+ * シリーズ詳細取得
+ */
+export const fetchSeriesById = async (id: string): Promise<Series> => {
+  return fetchFromMicroCMS<Series>(`series/${id}`);
+};
+
+/**
+ * スラッグからシリーズを取得
+ */
+export const fetchSeriesBySlug = async (slug: string): Promise<Series> => {
+  const response = await fetchSeries({
+    filters: `slug[equals]${slug}`,
+    limit: 1,
+  });
+
+  if (response.contents.length === 0) {
+    throw new Error(`シリーズが見つかりません: ${slug}`);
+  }
+
+  return response.contents[0];
+};
+
+/**
+ * 人気記事取得
+ */
+export const fetchPopularArticles = async (): Promise<PopularArticles> => {
+  const now = new Date();
+  const oneDay = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const oneWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const oneMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  const [daily, weekly, monthly, allTime] = await Promise.all([
+    fetchArticles({
+      publishedAfter: oneDay.toISOString().split('T')[0],
+      orders: '-stats.viewCount',
+      limit: 10,
+    }),
+    fetchArticles({
+      publishedAfter: oneWeek.toISOString().split('T')[0],
+      orders: '-stats.viewCount',
+      limit: 10,
+    }),
+    fetchArticles({
+      publishedAfter: oneMonth.toISOString().split('T')[0],
+      orders: '-stats.viewCount',
+      limit: 10,
+    }),
+    fetchArticles({
+      orders: '-stats.viewCount',
+      limit: 10,
+    }),
+  ]);
+
+  return {
+    daily: daily.contents,
+    weekly: weekly.contents,
+    monthly: monthly.contents,
+    allTime: allTime.contents,
+  };
+};
+
+/**
+ * トレンドコンテンツ取得
+ */
+export const fetchTrendingContent = async (): Promise<TrendingContent> => {
+  const [articles, tags, categories, authors] = await Promise.all([
+    fetchArticles({
+      orders: '-stats.viewCount',
+      limit: 20,
+    }),
+    fetchTags({
+      orders: '-stats.popularityScore',
+      limit: 10,
+    }),
+    fetchCategories({
+      orders: '-stats.articlesCount',
+      limit: 10,
+    }),
+    fetchAuthors({
+      orders: '-stats.totalViews',
+      limit: 10,
+    }),
+  ]);
+
+  return {
+    articles: articles.contents,
+    tags: tags.contents,
+    categories: categories.contents,
+    authors: authors.contents,
+  };
+};
+
+/**
+ * 統計サマリー取得（実際の実装では集計APIを使用）
+ */
+export const fetchStatsSummary = async (): Promise<StatsSummary> => {
+  // 注意: これは簡易実装です。実際のプロダクションでは
+  // microCMSの集計機能やサーバーサイドAPIを使用してください
+  const [articles, authors, categories, tags] = await Promise.all([
+    fetchArticles({ limit: 1 }), // 総数のみ取得
+    fetchAuthors({ limit: 1 }),
+    fetchCategories({ limit: 10, orders: '-stats.articlesCount' }),
+    fetchTags({ limit: 10, orders: '-stats.popularityScore' }),
+  ]);
+
+  return {
+    totalArticles: articles.totalCount,
+    totalAuthors: authors.totalCount,
+    totalViews: 0, // 実装必要
+    totalLikes: 0, // 実装必要
+    averageReadingTime: 0, // 実装必要
+    topCategories: categories.contents.map(cat => ({
+      category: cat,
+      count: cat.stats?.articlesCount || 0
+    })),
+    topTags: tags.contents.map(tag => ({
+      tag,
+      count: tag.stats?.articlesCount || 0
+    })),
+    activeAuthors: authors.contents,
+  };
+};
+
+/**
+ * 関連記事取得
+ */
+export const fetchRelatedArticles = async (
+  articleId: string,
+  limit: number = 5
+): Promise<Article[]> => {
+  // 同じカテゴリやタグの記事を取得（簡易実装）
+  const article = await fetchArticle(articleId);
+
+  const relatedByCategory = await fetchArticles({
+    categoryId: article.category.id,
+    filters: [`id[not_equals]${articleId}`],
+    limit: Math.ceil(limit / 2),
+    orders: '-stats.viewCount',
+  });
+
+  if (article.tags.length > 0) {
+    const relatedByTags = await fetchArticles({
+      tagId: article.tags[0].id,
+      filters: [`id[not_equals]${articleId}`],
+      limit: Math.ceil(limit / 2),
+      orders: '-stats.viewCount',
+    });
+
+    // 重複除去して結合
+    const combined = [...relatedByCategory.contents];
+    for (const tagArticle of relatedByTags.contents) {
+      if (!combined.find(a => a.id === tagArticle.id)) {
+        combined.push(tagArticle);
+      }
+    }
+
+    return combined.slice(0, limit);
+  }
+
+  return relatedByCategory.contents;
+};
+
+/**
+ * サイトマップ用記事一覧取得
+ */
+export const fetchSitemapArticles = async () => {
+  return fetchArticles({
+    status: 'published',
+    fields: ['slug', 'publishedAt', 'lastEditedAt'],
+    limit: 1000, // 必要に応じて調整
+    orders: '-publishedAt',
+  });
+};
+
+/**
+ * RSS/Atom フィード用記事取得
+ */
+export const fetchFeedArticles = async (limit: number = 20) => {
+  return fetchArticles({
+    status: 'published',
+    fields: ['title', 'slug', 'excerpt', 'content', 'author', 'publishedAt', 'category', 'tags'],
+    limit,
+    orders: '-publishedAt',
+  });
 };

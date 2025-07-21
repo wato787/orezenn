@@ -123,8 +123,12 @@ TypeScript型定義：
 
 ```
 src/types/
-├── api.ts                # microCMS API型（作成済み）
-├── ui.ts                 # UI関連型（今後）
+├── api.ts                # microCMS API型（作成済み）✅
+│                         # - Article, Author, Category, Tag, Series
+│                         # - 検索・フィルタ、統計、SEO関連型
+├── ui.ts                 # UI関連型（作成済み）✅  
+│                         # - コンポーネントProps、状態管理型
+│                         # - フォーム、アニメーション設定型
 ├── router.ts             # ルーティング型（今後）
 └── global.ts             # グローバル型（今後）
 ```
@@ -211,7 +215,9 @@ import { ArticleCard } from '../../../components/features/ArticleCard';
 ### Phase 1: 基本構造
 - [x] TanStack Query導入
 - [x] microCMS SDK導入
-- [ ] 基本コンポーネント作成
+- [x] 共通レイアウト構造作成（shadcn/ui）
+- [x] microCMS型定義作成
+- [ ] API呼び出しフック作成
 - [ ] ページルーティング設定
 
 ### Phase 2: 機能拡張
@@ -228,4 +234,4 @@ import { ArticleCard } from '../../../components/features/ArticleCard';
 
 ---
 
-**最終更新**: 2024年7月 
+**最終更新**: 2024年7月（Issue #4完了時点） 

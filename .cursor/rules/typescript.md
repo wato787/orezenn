@@ -68,8 +68,8 @@ if (isArticle(response)) {
 ### ファイル配置
 - **場所**: `src/types/` ディレクトリ
 - **分類**: 機能別に分割
-  - `api.ts` - microCMS関連の型
-  - `ui.ts` - UI関連の型（今後追加予定）
+  - `api.ts` - microCMS関連の型（作成済み）✅
+  - `ui.ts` - UI関連の型（作成済み）✅
   - `utils.ts` - ユーティリティ関連の型（今後追加予定）
 
 ### 型エクスポート
@@ -125,4 +125,4 @@ const element = document.getElementById('root')!; // DOM要素の存在が確実
 
 ---
 
-**最終更新**: 2024年7月 
+**最終更新**: 2024年7月（Issue #4完了時点） 
