@@ -1,104 +1,164 @@
+import { Layout } from '@/components/layout/Layout';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { BookOpen, Code, Sparkles } from 'lucide-react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 
 const App = () => {
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <header className='bg-white shadow-sm border-b'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-16'>
-            <div className='flex items-center'>
-              <h1 className='text-2xl font-bold text-gray-900'>Orezenn</h1>
-            </div>
-            <nav className='hidden md:flex space-x-8'>
-              <a
-                href='/'
-                className='text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium'
-              >
-                ホーム
-              </a>
-              <a
-                href='/articles'
-                className='text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium'
-              >
-                記事一覧
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/articles' element={<ArticleListPage />} />
-          <Route path='/articles/:slug' element={<ArticleDetailPage />} />
-          <Route path='*' element={<NotFoundPage />} />
-        </Routes>
-      </main>
-
-      <footer className='bg-white border-t mt-auto'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-          <div className='text-center text-gray-500 text-sm'>
-            © 2024 Orezenn - 個人用技術ブログプラットフォーム
-          </div>
-        </div>
-      </footer>
-    </div>
+    <Layout>
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/articles' element={<ArticleListPage />} />
+        <Route path='/articles/:slug' element={<ArticleDetailPage />} />
+        <Route path='/categories' element={<CategoriesPage />} />
+        <Route path='*' element={<NotFoundPage />} />
+      </Routes>
+    </Layout>
   );
 };
 
 // 一時的な仮ページコンポーネント（次のIssueで実装）
 const HomePage = () => (
-  <div className='text-center py-12'>
-    <h2 className='text-3xl font-bold text-gray-900 mb-4'>
-      技術記事を共有しよう
-    </h2>
-    <p className='text-xl text-gray-600 mb-8'>
-      個人用の技術ブログプラットフォーム
-    </p>
-    <div className='bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-2xl mx-auto'>
-      <p className='text-blue-800'>
-        🚧 現在開発中です。記事一覧とレイアウト機能を実装中...
+  <div className='container py-8'>
+    {/* Hero Section */}
+    <div className='text-center py-12 mb-8'>
+      <div className='flex justify-center mb-6'>
+        <div className='p-3 bg-primary/10 rounded-full'>
+          <BookOpen className='h-12 w-12 text-primary' />
+        </div>
+      </div>
+      <h1 className='text-4xl font-bold tracking-tight mb-4'>
+        技術記事を共有しよう
+      </h1>
+      <p className='text-xl text-muted-foreground mb-8 max-w-2xl mx-auto'>
+        個人用の技術ブログプラットフォーム。学びを記録し、知識を共有し、開発者として成長しよう。
       </p>
+      <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+        <Button size='lg' className='w-full sm:w-auto'>
+          記事を読む
+        </Button>
+        <Button variant='outline' size='lg' className='w-full sm:w-auto'>
+          投稿を始める
+        </Button>
+      </div>
     </div>
+
+    {/* Feature Cards */}
+    <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-12'>
+      <Card>
+        <CardHeader>
+          <div className='w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4'>
+            <Code className='h-6 w-6 text-blue-600' />
+          </div>
+          <CardTitle className='text-xl'>技術記事</CardTitle>
+          <CardDescription>
+            プログラミング、開発ツール、アーキテクチャなど様々な技術トピックを扱います
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className='w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4'>
+            <Sparkles className='h-6 w-6 text-green-600' />
+          </div>
+          <CardTitle className='text-xl'>モダンUI</CardTitle>
+          <CardDescription>
+            Zenn/Qiitaライクな美しいデザインで快適な読書体験を提供します
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className='w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4'>
+            <BookOpen className='h-6 w-6 text-purple-600' />
+          </div>
+          <CardTitle className='text-xl'>ナレッジベース</CardTitle>
+          <CardDescription>
+            学習記録とナレッジの蓄積で継続的な成長をサポートします
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
+
+    {/* Status */}
+    <Card className='text-center'>
+      <CardHeader>
+        <CardTitle>🚧 開発中</CardTitle>
+        <CardDescription>
+          現在、記事一覧とレイアウト機能を実装中です。 shadcn/uiとTanStack
+          Queryを使用したモダンなアーキテクチャを構築しています。
+        </CardDescription>
+      </CardHeader>
+    </Card>
   </div>
 );
 
 const ArticleListPage = () => (
-  <div className='text-center py-12'>
-    <h2 className='text-2xl font-bold text-gray-900 mb-4'>記事一覧</h2>
-    <div className='bg-yellow-50 border border-yellow-200 rounded-lg p-6 max-w-2xl mx-auto'>
-      <p className='text-yellow-800'>
-        📝 記事一覧機能は次のIssueで実装予定です
-      </p>
+  <div className='container py-8'>
+    <div className='text-center'>
+      <h1 className='text-3xl font-bold mb-4'>記事一覧</h1>
+      <Card className='max-w-2xl mx-auto'>
+        <CardContent className='pt-6'>
+          <p className='text-muted-foreground'>
+            📝 記事一覧機能は次のIssueで実装予定です
+          </p>
+        </CardContent>
+      </Card>
     </div>
   </div>
 );
 
 const ArticleDetailPage = () => (
-  <div className='text-center py-12'>
-    <h2 className='text-2xl font-bold text-gray-900 mb-4'>記事詳細</h2>
-    <div className='bg-yellow-50 border border-yellow-200 rounded-lg p-6 max-w-2xl mx-auto'>
-      <p className='text-yellow-800'>
-        📖 記事詳細機能は次のIssueで実装予定です
-      </p>
+  <div className='container py-8'>
+    <div className='text-center'>
+      <h1 className='text-3xl font-bold mb-4'>記事詳細</h1>
+      <Card className='max-w-2xl mx-auto'>
+        <CardContent className='pt-6'>
+          <p className='text-muted-foreground'>
+            📖 記事詳細機能は次のIssueで実装予定です
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+);
+
+const CategoriesPage = () => (
+  <div className='container py-8'>
+    <div className='text-center'>
+      <h1 className='text-3xl font-bold mb-4'>カテゴリ</h1>
+      <Card className='max-w-2xl mx-auto'>
+        <CardContent className='pt-6'>
+          <p className='text-muted-foreground'>
+            🏷️ カテゴリ機能は次のIssueで実装予定です
+          </p>
+        </CardContent>
+      </Card>
     </div>
   </div>
 );
 
 const NotFoundPage = () => (
-  <div className='text-center py-12'>
-    <h2 className='text-2xl font-bold text-gray-900 mb-4'>
-      404 - ページが見つかりません
-    </h2>
-    <p className='text-gray-600 mb-8'>お探しのページは存在しません。</p>
-    <a
-      href='/'
-      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-    >
-      ホームに戻る
-    </a>
+  <div className='container py-8'>
+    <div className='text-center'>
+      <h1 className='text-4xl font-bold mb-4'>404</h1>
+      <p className='text-xl text-muted-foreground mb-8'>
+        お探しのページは見つかりません
+      </p>
+      <Button asChild>
+        <a href='/'>ホームに戻る</a>
+      </Button>
+    </div>
   </div>
 );
 
