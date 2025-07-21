@@ -179,10 +179,14 @@ export const fetchArticle = async (id: string, queries?: MicroCMSQueries): Promi
  * スラッグから記事を取得
  */
 export const fetchArticleBySlug = async (slug: string): Promise<Article> => {
-  const response = await fetchArticles({
-    filters: [`slug[equals]${slug}`],
+  // 直接microCMSクライアントを使用してスラッグでフィルタリング
+  const queries: MicroCMSQueries = {
+    filters: `slug[equals]${slug}`,
     limit: 1,
-  });
+    depth: 2, // 関連データも取得
+  };
+
+  const response = await fetchFromMicroCMS<ArticlesResponse>('articles', queries);
 
   if (response.contents.length === 0) {
     throw new Error(`記事が見つかりません: ${slug}`);

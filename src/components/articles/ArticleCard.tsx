@@ -58,7 +58,10 @@ export const ArticleCard = ({
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <Link to={`/articles/${article.slug}`} className="group">
+                <Link
+                  to={`/articles/${article.slug || article.id}`}
+                  className="group"
+                >
                   <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
                     {article.emoji && (
                       <span className="mr-2">{article.emoji}</span>
@@ -105,7 +108,7 @@ export const ArticleCard = ({
     return (
       <>
         {article.eyecatch && (
-          <Link to={`/articles/${article.slug}`}>
+          <Link to={`/articles/${article.slug || article.id}`}>
             <div className="aspect-video w-full overflow-hidden rounded-t-lg">
               <img
                 src={article.eyecatch.url}
@@ -118,7 +121,10 @@ export const ArticleCard = ({
 
         <CardHeader className="space-y-3">
           <div>
-            <Link to={`/articles/${article.slug}`} className="group">
+            <Link
+              to={`/articles/${article.slug || article.id}`}
+              className="group"
+            >
               <h3 className="font-bold text-xl line-clamp-2 group-hover:text-primary transition-colors">
                 {article.emoji && <span className="mr-2">{article.emoji}</span>}
                 {article.title}
@@ -228,7 +234,10 @@ export const ArticleCard = ({
   };
 
   return (
-    <Card className={cn(getVariantStyles(), className)}>
+    <Card
+      className={cn(getVariantStyles(), className)}
+      data-testid="article-card"
+    >
       {getCardContent()}
     </Card>
   );

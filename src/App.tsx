@@ -1,5 +1,4 @@
 import { Layout } from '@/components/layout/Layout';
-import { ArticleList } from '@/components/articles';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { ArticleDetailPage, ArticleListPage } from '@/pages';
 import { BookOpen, Code, Sparkles } from 'lucide-react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -16,11 +16,11 @@ const App = () => {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/articles" element={<ArticleList />} />
-        <Route path="/articles/:slug" element={<ArticleDetailPage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/articles' element={<ArticleListPage />} />
+        <Route path='/articles/:slug' element={<ArticleDetailPage />} />
+        <Route path='/categories' element={<CategoriesPage />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </Layout>
   );
@@ -101,21 +101,6 @@ const HomePage = () => (
         </CardDescription>
       </CardHeader>
     </Card>
-  </div>
-);
-
-const ArticleDetailPage = () => (
-  <div className='container py-8'>
-    <div className='text-center'>
-      <h1 className='text-3xl font-bold mb-4'>記事詳細</h1>
-      <Card className='max-w-2xl mx-auto'>
-        <CardContent className='pt-6'>
-          <p className='text-muted-foreground'>
-            📖 記事詳細機能は次のIssueで実装予定です
-          </p>
-        </CardContent>
-      </Card>
-    </div>
   </div>
 );
 
