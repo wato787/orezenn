@@ -1,4 +1,5 @@
 import type { Article } from "@/types/api";
+import { formatDate } from "@/utils/date";
 import { Calendar, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -7,15 +8,6 @@ interface ArticleMetaInfoProps {
 }
 
 export const ArticleMetaInfo = ({ article }: ArticleMetaInfoProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <div className="border-b border-border bg-background/50 backdrop-blur-sm sticky top-0 z-10">
       <div className="container max-w-4xl mx-auto py-4">

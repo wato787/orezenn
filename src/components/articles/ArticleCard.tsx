@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import type { Article } from "@/types/api";
 import { cn } from "@/utils/cn";
+import { formatDate } from "@/utils/date";
 import { Calendar, Clock, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -31,15 +32,6 @@ export const ArticleCard = ({
   showTags = true,
   className,
 }: ArticleCardProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const getVariantStyles = () => {
     switch (variant) {
       case "compact":

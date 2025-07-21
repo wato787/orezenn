@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Article } from "@/types/api";
+import { formatDate } from "@/utils/date";
 import {
   Calendar,
   Clock,
@@ -22,14 +23,6 @@ export const ArticleHeader = ({
   showExternalLinks = true,
 }: ArticleHeaderProps) => {
   // 日付フォーマット
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   return (
     <header className="space-y-6">
