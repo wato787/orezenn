@@ -13,12 +13,17 @@ import { AlertCircle, FileText, Search } from "lucide-react";
  */
 export const ArticleCardSkeleton = () => (
   <Card>
+    {/* 画像エリア（必ず表示） */}
     <Skeleton variant="rounded" height="200px" className="rounded-t-lg" />
+
     <CardHeader className="space-y-3">
+      {/* タイトル */}
       <div className="space-y-2">
-        <SkeletonText size="lg" width="75%" />
-        <SkeletonText size="md" width="50%" />
+        <SkeletonText size="lg" width="85%" />
+        <SkeletonText size="md" width="60%" />
       </div>
+
+      {/* 日付とカテゴリ */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Skeleton variant="text" size="sm" width="96px" />
@@ -27,12 +32,16 @@ export const ArticleCardSkeleton = () => (
         <Skeleton variant="rounded" height="24px" width="80px" />
       </div>
     </CardHeader>
+
     <CardContent className="pt-0">
       <div className="space-y-3">
+        {/* 著者 */}
         <div className="flex items-center gap-2">
           <SkeletonAvatar size="sm" />
           <Skeleton variant="text" size="sm" width="96px" />
         </div>
+
+        {/* タグ */}
         <div className="flex gap-2">
           <Skeleton variant="rounded" height="24px" width="64px" />
           <Skeleton variant="rounded" height="24px" width="80px" />
@@ -147,13 +156,18 @@ export const ArticleCardSkeletonCompact = () => (
     <CardHeader className="pb-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0 space-y-2">
-          <SkeletonText size="lg" width="75%" />
-          <SkeletonText size="lg" width="50%" />
+          {/* タイトル */}
+          <SkeletonText size="lg" width="85%" />
+          <SkeletonText size="md" width="60%" />
+
+          {/* 日付 */}
           <div className="flex items-center gap-4 mt-2">
             <Skeleton variant="text" size="sm" width="96px" />
             <Skeleton variant="text" size="sm" width="64px" />
           </div>
         </div>
+
+        {/* 画像エリア（必ず表示） */}
         <Skeleton
           variant="rounded"
           width="80px"

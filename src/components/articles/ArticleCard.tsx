@@ -8,7 +8,7 @@ import {
 import type { Article } from "@/types/api";
 import { cn } from "@/utils/cn";
 import { formatDate } from "@/utils/date";
-import { Calendar, Clock, Tag } from "lucide-react";
+import { Calendar, Clock, ImageOff, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface ArticleCardProps {
@@ -76,15 +76,20 @@ export const ArticleCard = ({
                 </div>
               </div>
 
-              {article.eyecatch && (
-                <Link to={`/articles/${article.id}`} className="flex-shrink-0">
-                  <img
-                    src={article.eyecatch.url}
-                    alt={article.title}
-                    className="w-20 h-16 object-cover rounded-md"
-                  />
-                </Link>
-              )}
+              {/* コンパクト表示の画像エリア */}
+              <Link to={`/articles/${article.id}`} className="flex-shrink-0">
+                <div className="w-20 h-16 bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                  {article.eyecatch ? (
+                    <img
+                      src={article.eyecatch.url}
+                      alt={article.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <ImageOff className="h-6 w-6 text-muted-foreground" />
+                  )}
+                </div>
+              </Link>
             </div>
           </CardHeader>
         </>
@@ -93,17 +98,23 @@ export const ArticleCard = ({
 
     return (
       <>
-        {article.eyecatch && (
-          <Link to={`/articles/${article.id}`}>
-            <div className="aspect-video w-full overflow-hidden rounded-t-lg">
+        {/* 画像エリア（必ず表示） */}
+        <Link to={`/articles/${article.id}`}>
+          <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted flex items-center justify-center">
+            {article.eyecatch ? (
               <img
                 src={article.eyecatch.url}
                 alt={article.title}
                 className="w-full h-full object-cover transition-transform hover:scale-105"
               />
-            </div>
-          </Link>
-        )}
+            ) : (
+              <div className="text-center text-muted-foreground">
+                <ImageOff className="h-12 w-12 mx-auto mb-2" />
+                <div className="text-sm">画像なし</div>
+              </div>
+            )}
+          </div>
+        </Link>
 
         <CardHeader className="space-y-3">
           <div>
