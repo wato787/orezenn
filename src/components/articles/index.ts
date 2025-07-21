@@ -1,5 +1,4 @@
-// 記事関連共有コンポーネント
+// Articles components
 export { ArticleCard } from "./ArticleCard";
-export { ArticleHeader } from "./ArticleHeader";
 export { ArticleListEmpty, ArticleListError, ArticleListLoading } from "./ArticleListState";
 
