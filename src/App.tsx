@@ -1,3 +1,4 @@
+import { ArticleList } from '@/components/articles';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +17,7 @@ const App = () => {
     <Layout>
       <Routes>
         <Route path='/' element={<HomePage />} />
-        <Route path='/articles' element={<ArticleListPage />} />
+        <Route path='/articles' element={<ArticleList />} />
         <Route path='/articles/:slug' element={<ArticleDetailPage />} />
         <Route path='/categories' element={<CategoriesPage />} />
         <Route path='*' element={<NotFoundPage />} />
@@ -100,21 +101,6 @@ const HomePage = () => (
         </CardDescription>
       </CardHeader>
     </Card>
-  </div>
-);
-
-const ArticleListPage = () => (
-  <div className='container py-8'>
-    <div className='text-center'>
-      <h1 className='text-3xl font-bold mb-4'>記事一覧</h1>
-      <Card className='max-w-2xl mx-auto'>
-        <CardContent className='pt-6'>
-          <p className='text-muted-foreground'>
-            📝 記事一覧機能は次のIssueで実装予定です
-          </p>
-        </CardContent>
-      </Card>
-    </div>
   </div>
 );
 
