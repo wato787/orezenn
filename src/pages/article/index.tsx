@@ -1,15 +1,14 @@
-import { ArticleHeader } from "@/components/articles";
 import { ArticleListError } from "@/components/articles/ArticleListState";
-import { MarkdownRenderer } from "@/components/markdown";
+import { ContentRenderer } from "@/components/markdown";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useArticle, useRelatedArticles } from "@/hooks";
 import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
-  ArticleDebugInfo,
   ArticleDetailSkeleton,
+  ArticleMetaInfo,
+  ArticleTitle,
   RelatedArticles,
 } from "./components";
 
@@ -78,39 +77,35 @@ export const ArticleDetailPage = () => {
   ];
 
   return (
-    <div className="container py-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background">
+      {/* スティッキーメタ情報 */}
+      <ArticleMetaInfo article={article} />
+
+      <div className="container mx-auto max-w-4xl">
         {/* パンくずリスト */}
-        <Breadcrumb items={breadcrumbItems} />
+        <div className="py-4">
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
 
-        {/* 記事ヘッダー */}
-        <ArticleHeader article={article} />
-
-        <Separator />
-
-        {/* デバッグ情報 */}
-        <ArticleDebugInfo
-          id={slug}
-          article={article}
-          error={error as Error | null}
-        />
+        {/* 記事タイトル・タグ */}
+        <ArticleTitle article={article} />
 
         {/* 記事本文 */}
-        <article className="prose prose-slate max-w-none dark:prose-invert">
-          <MarkdownRenderer content={article.content} />
-        </article>
-
-        <Separator />
+        <div className="mb-16">
+          <ContentRenderer content={article.content} />
+        </div>
 
         {/* 関連記事 */}
-        <RelatedArticles
-          articles={relatedArticles || []}
-          isPending={relatedPending}
-        />
+        <div className="border-t border-border pt-12">
+          <RelatedArticles
+            articles={relatedArticles || []}
+            isPending={relatedPending}
+          />
+        </div>
 
         {/* ナビゲーション */}
-        <div className="flex justify-center pt-8">
-          <Button asChild variant="outline">
+        <div className="flex justify-center pt-12 pb-8">
+          <Button asChild variant="outline" size="lg">
             <Link to="/articles">
               <ArrowLeft className="h-4 w-4 mr-2" />
               記事一覧に戻る

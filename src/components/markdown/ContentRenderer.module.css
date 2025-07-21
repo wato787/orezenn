@@ -1,0 +1,235 @@
+/* microCMSのHTMLコンテンツ用スタイル */
+.htmlContent {
+  max-width: none;
+  line-height: 1.7;
+  color: hsl(var(--foreground));
+}
+
+/* 見出し */
+.htmlContent h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+  scroll-margin-top: 5rem;
+  text-align: left;
+}
+
+.htmlContent h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  scroll-margin-top: 5rem;
+  text-align: left;
+}
+
+.htmlContent h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  scroll-margin-top: 5rem;
+  text-align: left;
+}
+
+.htmlContent h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 5rem;
+  text-align: left;
+}
+
+.htmlContent h5,
+.htmlContent h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 5rem;
+  text-align: left;
+}
+
+/* 段落 */
+.htmlContent p {
+  margin: 1.5rem 0;
+  line-height: 1.8;
+  font-size: 1rem;
+  text-align: left;
+}
+
+/* リスト */
+.htmlContent ul {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+  width: fit-content;
+}
+
+.htmlContent ol {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+  list-style-type: decimal;
+  width: fit-content;
+}
+
+.htmlContent li {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+  width: fit-content;
+  text-align: left;
+}
+
+.htmlContent li > ul,
+.htmlContent li > ol {
+  margin: 0.5rem 0;
+}
+
+/* 引用 */
+.htmlContent blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid hsl(var(--primary) / 0.3);
+  background-color: hsl(var(--muted) / 0.3);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+}
+
+.htmlContent blockquote p {
+  margin: 0;
+}
+
+/* コード */
+.htmlContent code {
+  background-color: hsl(var(--muted));
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo,
+    monospace;
+  font-size: 0.875rem;
+  border: 1px solid hsl(var(--border));
+}
+
+.htmlContent pre {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid hsl(var(--border));
+}
+
+.htmlContent pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 0.875rem;
+  color: inherit;
+}
+
+/* リンク */
+.htmlContent a {
+  color: hsl(var(--primary));
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.htmlContent a:hover {
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.6);
+}
+
+/* 強調・イタリック */
+.htmlContent strong {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.htmlContent em {
+  font-style: italic;
+}
+
+/* 画像 */
+.htmlContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin: 2rem auto;
+  display: block;
+  border: 1px solid hsl(var(--border));
+}
+
+/* 区切り線 */
+.htmlContent hr {
+  margin: 3rem 0;
+  border: none;
+  height: 1px;
+  background-color: hsl(var(--border));
+}
+
+/* テーブル */
+.htmlContent table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.htmlContent thead {
+  background-color: hsl(var(--muted));
+}
+
+.htmlContent th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.htmlContent td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+}
+
+.htmlContent tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 768px) {
+  .htmlContent h1 {
+    font-size: 1.75rem;
+  }
+
+  .htmlContent h2 {
+    font-size: 1.5rem;
+  }
+
+  .htmlContent h3 {
+    font-size: 1.25rem;
+  }
+
+  .htmlContent pre {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .htmlContent table {
+    font-size: 0.875rem;
+  }
+
+  .htmlContent th,
+  .htmlContent td {
+    padding: 0.5rem 0.75rem;
+  }
+}
