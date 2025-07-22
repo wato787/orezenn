@@ -1,4 +1,4 @@
-import type { MicroCMSDate, MicroCMSImage } from 'microcms-js-sdk';
+import type { MicroCMSDate, MicroCMSImage } from "microcms-js-sdk";
 
 /**
  * microCMSの基本フィールド型
@@ -10,12 +10,12 @@ export interface MicroCMSContent extends MicroCMSDate {
 /**
  * 記事のステータス
  */
-export type ArticleStatus = 'draft' | 'published' | 'private';
+export type ArticleStatus = "draft" | "published" | "private";
 
 /**
  * 記事の種別
  */
-export type ArticleType = 'tech' | 'idea' | 'book' | 'scrap';
+export type ArticleType = "tech" | "idea" | "book" | "scrap";
 
 /**
  * 作成者情報
@@ -97,7 +97,7 @@ export interface Article extends MicroCMSContent {
 
   // 関連情報
   author: Author;
-  category: Category;
+  categories: Category[];
   tags: Tag[];
   series?: Series;
 
@@ -118,7 +118,7 @@ export interface Article extends MicroCMSContent {
 
   // 技術関連
   techStack?: string[]; // 使用技術
-  difficulty?: 'beginner' | 'intermediate' | 'advanced'; // 難易度
+  difficulty?: "beginner" | "intermediate" | "advanced"; // 難易度
   readingTime?: number; // 推定読書時間（分）
 
   // 外部リンク
@@ -179,7 +179,7 @@ export interface ArticleSearchParams {
   seriesSlug?: string;
   type?: ArticleType;
   status?: ArticleStatus;
-  difficulty?: Article['difficulty'];
+  difficulty?: Article["difficulty"];
 
   // 日付範囲
   publishedAfter?: string; // YYYY-MM-DD
@@ -265,7 +265,14 @@ export interface SitemapArticle {
   publishedAt: string;
   lastEditedAt?: string;
   priority: number;
-  changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+  changefreq:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never";
 }
 
 /**

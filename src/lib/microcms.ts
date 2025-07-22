@@ -1,19 +1,19 @@
-import { createClient, type MicroCMSQueries } from 'microcms-js-sdk';
+import { createClient, type MicroCMSQueries } from "microcms-js-sdk";
 import type {
-    Article,
-    ArticleSearchParams,
-    ArticlesResponse,
-    Author,
-    AuthorsResponse,
-    CategoriesResponse,
-    Category,
-    CategorySearchParams,
-    Series,
-    SeriesResponse,
-    Tag,
-    TagSearchParams,
-    TagsResponse
-} from '../types/api';
+  Article,
+  ArticleSearchParams,
+  ArticlesResponse,
+  Author,
+  AuthorsResponse,
+  CategoriesResponse,
+  Category,
+  CategorySearchParams,
+  Series,
+  SeriesResponse,
+  Tag,
+  TagSearchParams,
+  TagsResponse,
+} from "../types/api";
 
 // 環境変数のバリデーション
 const serviceDomain = import.meta.env.VITE_MICROCMS_SERVICE_DOMAIN;
@@ -21,9 +21,9 @@ const apiKey = import.meta.env.VITE_MICROCMS_API_KEY;
 
 if (!serviceDomain || !apiKey) {
   throw new Error(
-    'microCMS設定が不完全です。以下の環境変数を設定してください:\n' +
-    '- VITE_MICROCMS_SERVICE_DOMAIN\n' +
-    '- VITE_MICROCMS_API_KEY'
+    "microCMS設定が不完全です。以下の環境変数を設定してください:\n" +
+      "- VITE_MICROCMS_SERVICE_DOMAIN\n" +
+      "- VITE_MICROCMS_API_KEY"
   );
 }
 
@@ -56,15 +56,17 @@ export const fetchFromMicroCMS = async <T>(
 
       switch (status) {
         case 404:
-          throw new Error('コンテンツが見つかりません');
+          throw new Error("コンテンツが見つかりません");
         case 401:
-          throw new Error('APIキーが無効です');
+          throw new Error("APIキーが無効です");
         case 403:
-          throw new Error('このAPIへのアクセス権限がありません');
+          throw new Error("このAPIへのアクセス権限がありません");
         case 429:
-          throw new Error('リクエスト制限に達しました。しばらく時間をおいて再試行してください');
+          throw new Error(
+            "リクエスト制限に達しました。しばらく時間をおいて再試行してください"
+          );
         case 500:
-          throw new Error('microCMSサーバーでエラーが発生しました');
+          throw new Error("microCMSサーバーでエラーが発生しました");
         default:
           throw new Error(`データの取得に失敗しました: ${endpoint}`);
       }
@@ -113,7 +115,7 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
     filters.push(`isPinned[equals]${params.isPinned}`);
   }
   if (params.hasEyecatch !== undefined) {
-    filters.push(`eyecatch[${params.hasEyecatch ? 'exists' : 'not_exists'}]`);
+    filters.push(`eyecatch[${params.hasEyecatch ? "exists" : "not_exists"}]`);
   }
 
   // 日付範囲
@@ -133,7 +135,7 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
   }
 
   if (filters.length > 0) {
-    queries.filters = filters.join('[and]');
+    queries.filters = filters.join("[and]");
   }
 
   // ページネーション
@@ -151,7 +153,7 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
 
   // フィールド選択
   if (params.fields) {
-    queries.fields = params.fields.join(',');
+    queries.fields = params.fields.join(",");
   }
   if (params.depth) {
     queries.depth = params.depth;
@@ -163,24 +165,29 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
 /**
  * 記事一覧取得用のヘルパー関数
  */
-export const fetchArticles = async (params?: ArticleSearchParams): Promise<ArticlesResponse> => {
+export const fetchArticles = async (
+  params?: ArticleSearchParams
+): Promise<ArticlesResponse> => {
   const queries = buildMicroCMSQueries(params || {});
-  return fetchFromMicroCMS<ArticlesResponse>('articles', queries);
+  return fetchFromMicroCMS<ArticlesResponse>("articles", queries);
 };
 
 /**
  * 記事詳細取得用のヘルパー関数
  */
-export const fetchArticle = async (id: string, queries?: MicroCMSQueries): Promise<Article> => {
+export const fetchArticle = async (
+  id: string,
+  queries?: MicroCMSQueries
+): Promise<Article> => {
   return fetchFromMicroCMS<Article>(`articles/${id}`, queries);
 };
-
-
 
 /**
  * カテゴリ一覧取得用のヘルパー関数
  */
-export const fetchCategories = async (params?: CategorySearchParams): Promise<CategoriesResponse> => {
+export const fetchCategories = async (
+  params?: CategorySearchParams
+): Promise<CategoriesResponse> => {
   const queries: MicroCMSQueries = {};
 
   if (params?.q) queries.q = params.q;
@@ -194,10 +201,10 @@ export const fetchCategories = async (params?: CategorySearchParams): Promise<Ca
   }
 
   if (filters.length > 0) {
-    queries.filters = filters.join('[and]');
+    queries.filters = filters.join("[and]");
   }
 
-  return fetchFromMicroCMS<CategoriesResponse>('categories', queries);
+  return fetchFromMicroCMS<CategoriesResponse>("categories", queries);
 };
 
 /**
@@ -207,12 +214,12 @@ export const fetchCategory = async (id: string): Promise<Category> => {
   return fetchFromMicroCMS<Category>(`categories/${id}`);
 };
 
-
-
 /**
  * タグ一覧取得用のヘルパー関数
  */
-export const fetchTags = async (params?: TagSearchParams): Promise<TagsResponse> => {
+export const fetchTags = async (
+  params?: TagSearchParams
+): Promise<TagsResponse> => {
   const queries: MicroCMSQueries = {};
 
   if (params?.q) queries.q = params.q;
@@ -220,7 +227,7 @@ export const fetchTags = async (params?: TagSearchParams): Promise<TagsResponse>
   if (params?.offset) queries.offset = params.offset;
   if (params?.orders) queries.orders = params.orders;
 
-  return fetchFromMicroCMS<TagsResponse>('tags', queries);
+  return fetchFromMicroCMS<TagsResponse>("tags", queries);
 };
 
 /**
@@ -230,13 +237,13 @@ export const fetchTag = async (id: string): Promise<Tag> => {
   return fetchFromMicroCMS<Tag>(`tags/${id}`);
 };
 
-
-
 /**
  * 作成者一覧取得
  */
-export const fetchAuthors = async (queries?: MicroCMSQueries): Promise<AuthorsResponse> => {
-  return fetchFromMicroCMS<AuthorsResponse>('authors', queries);
+export const fetchAuthors = async (
+  queries?: MicroCMSQueries
+): Promise<AuthorsResponse> => {
+  return fetchFromMicroCMS<AuthorsResponse>("authors", queries);
 };
 
 /**
@@ -246,13 +253,13 @@ export const fetchAuthor = async (id: string): Promise<Author> => {
   return fetchFromMicroCMS<Author>(`authors/${id}`);
 };
 
-
-
 /**
  * シリーズ一覧取得
  */
-export const fetchSeries = async (queries?: MicroCMSQueries): Promise<SeriesResponse> => {
-  return fetchFromMicroCMS<SeriesResponse>('series', queries);
+export const fetchSeries = async (
+  queries?: MicroCMSQueries
+): Promise<SeriesResponse> => {
+  return fetchFromMicroCMS<SeriesResponse>("series", queries);
 };
 
 /**
@@ -261,8 +268,6 @@ export const fetchSeries = async (queries?: MicroCMSQueries): Promise<SeriesResp
 export const fetchSeriesById = async (id: string): Promise<Series> => {
   return fetchFromMicroCMS<Series>(`series/${id}`);
 };
-
-
 
 /**
  * 関連記事取得
@@ -275,10 +280,10 @@ export const fetchRelatedArticles = async (
   const article = await fetchArticle(articleId);
 
   const relatedByCategory = await fetchArticles({
-    categoryId: article.category.id,
+    categoryId: article.categories[0].id,
     filters: [`id[not_equals]${articleId}`],
     limit: Math.ceil(limit / 2),
-    orders: '-publishedAt',
+    orders: "-publishedAt",
   });
 
   if (article.tags.length > 0) {
@@ -286,13 +291,13 @@ export const fetchRelatedArticles = async (
       tagId: article.tags[0].id,
       filters: [`id[not_equals]${articleId}`],
       limit: Math.ceil(limit / 2),
-      orders: '-publishedAt',
+      orders: "-publishedAt",
     });
 
     // 重複除去して結合
     const combined = [...relatedByCategory.contents];
     for (const tagArticle of relatedByTags.contents) {
-      if (!combined.find(a => a.id === tagArticle.id)) {
+      if (!combined.find((a) => a.id === tagArticle.id)) {
         combined.push(tagArticle);
       }
     }
@@ -308,10 +313,10 @@ export const fetchRelatedArticles = async (
  */
 export const fetchSitemapArticles = async () => {
   return fetchArticles({
-    status: 'published',
-    fields: ['slug', 'publishedAt', 'lastEditedAt'],
+    status: "published",
+    fields: ["slug", "publishedAt", "lastEditedAt"],
     limit: 1000, // 必要に応じて調整
-    orders: '-publishedAt',
+    orders: "-publishedAt",
   });
 };
 
@@ -320,9 +325,18 @@ export const fetchSitemapArticles = async () => {
  */
 export const fetchFeedArticles = async (limit: number = 20) => {
   return fetchArticles({
-    status: 'published',
-    fields: ['title', 'slug', 'excerpt', 'content', 'author', 'publishedAt', 'category', 'tags'],
+    status: "published",
+    fields: [
+      "title",
+      "slug",
+      "excerpt",
+      "content",
+      "author",
+      "publishedAt",
+      "category",
+      "tags",
+    ],
     limit,
-    orders: '-publishedAt',
+    orders: "-publishedAt",
   });
 };

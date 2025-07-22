@@ -59,18 +59,33 @@ export const ArticleCard = ({
                   </h3>
                 </Link>
 
-                <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      {formatDate(article.publishedAt || article.createdAt)}
-                    </span>
-                  </div>
-
-                  {article.readingTime && (
+                <div className="mt-2">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{article.readingTime}分</span>
+                      <Calendar className="h-4 w-4" />
+                      <span>
+                        {formatDate(article.publishedAt || article.createdAt)}
+                      </span>
+                    </div>
+
+                    {article.readingTime && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        <span>{article.readingTime}分</span>
+                      </div>
+                    )}
+                  </div>
+                  {article.categories && article.categories.length > 0 && (
+                    <div className="flex gap-2 mt-2">
+                      {article.categories.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          to={`/categories/${cat.id}`}
+                          className="inline-block rounded-lg bg-primary/10 text-primary text-sm px-3 py-1.5 font-semibold"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -132,7 +147,8 @@ export const ArticleCard = ({
             )}
           </div>
 
-          <div className="flex items-center justify-between">
+          {/* 日付・読書時間・カテゴリバッジを縦並びに */}
+          <div className="mt-2">
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -148,14 +164,18 @@ export const ArticleCard = ({
                 </div>
               )}
             </div>
-
-            {article.category && (
-              <Link
-                to={`/categories/${article.category.id}`}
-                className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full hover:bg-primary/20 transition-colors"
-              >
-                {article.category.name}
-              </Link>
+            {article.categories && article.categories.length > 0 && (
+              <div className="flex gap-2 mt-2">
+                {article.categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    to={`/categories/${cat.id}`}
+                    className="inline-block rounded-full bg-black text-white text-sm px-3 py-1.5 "
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+              </div>
             )}
           </div>
         </CardHeader>
