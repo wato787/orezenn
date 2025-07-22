@@ -2,13 +2,11 @@
 export {
     createArticleQueryKey,
     createArticlesQueryKey,
-    createLatestArticlesQueryKey,
     createRelatedArticlesQueryKey,
     useArticle,
     useArticlePrefetch,
     useArticles,
     useInfiniteArticles,
-    useLatestArticles,
     useRelatedArticles,
     useSearchArticles,
     type ArticleQueryInvalidation

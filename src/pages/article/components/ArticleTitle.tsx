@@ -15,9 +15,6 @@ export const ArticleTitle = ({ article }: ArticleTitleProps) => {
         <div className="flex items-center gap-2">
           <Link to={`/categories/${article.category.id}`}>
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              {article.category.emoji && (
-                <span className="mr-1">{article.category.emoji}</span>
-              )}
               {article.category.name}
             </Badge>
           </Link>

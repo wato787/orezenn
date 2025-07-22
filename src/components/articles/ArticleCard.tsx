@@ -151,7 +151,7 @@ export const ArticleCard = ({
 
             {article.category && (
               <Link
-                to={`/categories/${article.category.slug}`}
+                to={`/categories/${article.category.id}`}
                 className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full hover:bg-primary/20 transition-colors"
               >
                 {article.category.name}

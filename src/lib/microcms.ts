@@ -1,18 +1,18 @@
 import { createClient, type MicroCMSQueries } from 'microcms-js-sdk';
 import type {
-  Article,
-  ArticleSearchParams,
-  ArticlesResponse,
-  Author,
-  AuthorsResponse,
-  CategoriesResponse,
-  Category,
-  CategorySearchParams,
-  Series,
-  SeriesResponse,
-  Tag,
-  TagSearchParams,
-  TagsResponse
+    Article,
+    ArticleSearchParams,
+    ArticlesResponse,
+    Author,
+    AuthorsResponse,
+    CategoriesResponse,
+    Category,
+    CategorySearchParams,
+    Series,
+    SeriesResponse,
+    Tag,
+    TagSearchParams,
+    TagsResponse
 } from '../types/api';
 
 // 環境変数のバリデーション
@@ -301,19 +301,6 @@ export const fetchRelatedArticles = async (
   }
 
   return relatedByCategory.contents;
-};
-
-/**
- * 最新記事取得
- */
-export const fetchLatestArticles = async (limit: number = 10): Promise<Article[]> => {
-  const response = await fetchArticles({
-    status: 'published',
-    orders: '-publishedAt',
-    limit,
-  });
-
-  return response.contents;
 };
 
 /**

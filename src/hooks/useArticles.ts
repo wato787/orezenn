@@ -1,14 +1,13 @@
 import {
-  fetchArticle,
-  fetchArticles,
-  fetchLatestArticles,
-  fetchRelatedArticles
+    fetchArticle,
+    fetchArticles,
+    fetchRelatedArticles
 } from '@/lib/microcms';
 import type {
-  ApiError,
-  Article,
-  ArticleSearchParams,
-  ArticlesResponse
+    ApiError,
+    Article,
+    ArticleSearchParams,
+    ArticlesResponse
 } from '@/types/api';
 import { useInfiniteQuery, useQuery, type UseInfiniteQueryOptions, type UseQueryOptions } from '@tanstack/react-query';
 
@@ -20,15 +19,9 @@ export const createArticlesQueryKey = (params?: ArticleSearchParams) =>
 export const createArticleQueryKey = (id: string) =>
   ['articles', 'detail', id] as const;
 
-
-
 // 関連記事のクエリキー生成
 export const createRelatedArticlesQueryKey = (articleId: string, limit?: number) =>
   ['articles', 'related', articleId, limit] as const;
-
-// 最新記事のクエリキー生成
-export const createLatestArticlesQueryKey = (limit?: number) =>
-  ['articles', 'latest', limit] as const;
 
 /**
  * 記事一覧取得フック
@@ -62,8 +55,6 @@ export const useArticle = (
   });
 };
 
-
-
 /**
  * 関連記事取得フック
  */
@@ -77,21 +68,6 @@ export const useRelatedArticles = (
     queryFn: () => fetchRelatedArticles(articleId, limit),
     staleTime: 15 * 60 * 1000, // 15分
     enabled: Boolean(articleId), // 記事IDが存在する場合のみクエリ実行
-    ...options,
-  });
-};
-
-/**
- * 最新記事取得フック
- */
-export const useLatestArticles = (
-  limit: number = 10,
-  options?: Omit<UseQueryOptions<Article[], ApiError>, 'queryKey' | 'queryFn'>
-) => {
-  return useQuery({
-    queryKey: createLatestArticlesQueryKey(limit),
-    queryFn: () => fetchLatestArticles(limit),
-    staleTime: 2 * 60 * 1000, // 2分（最新記事なので短めに設定）
     ...options,
   });
 };
@@ -167,11 +143,8 @@ export const useArticlePrefetch = () => {
   };
 };
 
-/**
- * 記事キャッシュ無効化用ユーティリティ型
- */
 export type ArticleQueryInvalidation = {
-  type: 'all' | 'list' | 'detail' | 'search' | 'related' | 'latest';
+  type: 'all' | 'list' | 'detail' | 'search' | 'related';
   id?: string;
   slug?: string;
   params?: ArticleSearchParams;

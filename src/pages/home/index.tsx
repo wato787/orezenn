@@ -1,12 +1,19 @@
 import { ArticleCard } from "@/components/articles";
 import { SectionLoadingSpinner } from "@/components/ui/loading-spinner";
-import { useLatestArticles } from "@/hooks";
+import { useArticles } from "@/hooks";
 import { ArrowRight, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const HomePage = () => {
-  const { data: articlesResponse, isPending, error } = useLatestArticles(6);
-  const articles = articlesResponse || [];
+  const {
+    data: articlesResponse,
+    isPending,
+    error,
+  } = useArticles({
+    limit: 6,
+    orders: "-publishedAt",
+  });
+  const articles = articlesResponse?.contents || [];
 
   return (
     <div className="min-h-screen py-16">
