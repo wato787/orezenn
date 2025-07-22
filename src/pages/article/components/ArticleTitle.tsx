@@ -11,11 +11,11 @@ export const ArticleTitle = ({ article }: ArticleTitleProps) => {
   return (
     <div className="space-y-6 py-8">
       {/* カテゴリ */}
-      {article.category && (
+      {article.categories && article.categories.length > 0 && (
         <div className="flex items-center gap-2">
-          <Link to={`/categories/${article.category.id}`}>
+          <Link to={`/categories/${article.categories[0].id}`}>
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              {article.category.name}
+              {article.categories[0].name}
             </Badge>
           </Link>
         </div>
