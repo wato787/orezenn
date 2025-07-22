@@ -1,3 +1,7 @@
+---
+alwaysApply: true
+---
+
 # Git・コミットメッセージ ルール
 
 ## 📝 コミットメッセージ規約
@@ -195,4 +199,202 @@ git commit -m "feat: ヘッダー component added"
 
 ---
 
-**最終更新**: 2024年7月（Issue #3完了時点） 
+**最終更新**: 2024年7月（Issue #3完了時点）
+# Git・コミットメッセージ ルール
+
+## 📝 コミットメッセージ規約
+
+### 基本フォーマット
+```
+<type>(scope): <subject>
+
+<body>
+
+<footer>
+```
+
+**例**:
+```
+feat(layout): Header・Footer・Layoutコンポーネント追加
+
+- shadcn/uiを使用したモダンなナビゲーション
+- レスポンシブ対応の検索バー
+- SNSリンク付きのフッター
+
+Issue #3
+```
+
+### Type（必須）
+- **feat**: 新機能追加
+- **fix**: バグ修正
+- **docs**: ドキュメント更新
+- **style**: コードスタイル・フォーマット変更（機能変更なし）
+- **refactor**: リファクタリング（機能変更なし）
+- **perf**: パフォーマンス改善
+- **test**: テスト追加・修正
+- **chore**: ビルド・設定・依存関係更新
+
+### Scope（推奨）
+- **ui**: UIコンポーネント関連
+- **layout**: レイアウト関連
+- **api**: API・データ取得関連
+- **hooks**: カスタムフック関連
+- **types**: 型定義関連
+- **config**: 設定ファイル関連
+- **deps**: 依存関係関連
+
+### Subject（必須）
+- **日本語**: わかりやすい日本語で記述
+- **50文字以内**: 簡潔に要点をまとめる
+- **動詞から開始**: 「追加」「修正」「更新」「削除」など
+- **句点なし**: 末尾に「。」は付けない
+
+### Body（推奨）
+- **詳細説明**: 何を・なぜ・どのように変更したか
+- **箇条書き**: `-` を使用してポイントを整理
+- **72文字改行**: 読みやすさのため適度に改行
+
+### Footer（Issue関連時は必須）
+- **Issue番号**: `Issue #番号` または `Closes #番号`
+- **Breaking Changes**: 破壊的変更がある場合は明記
+
+## 🎯 コミット単位
+
+### 適切な粒度
+- **Single Responsibility**: 1つのコミットは1つの責任
+- **Atomic**: 独立してレビュー・リバート可能
+- **論理的単位**: 機能やバグ修正の完全な単位
+
+```bash
+# ✅ Good - 論理的に関連する変更をまとめる
+git commit -m "feat(layout): Header・Footer・Layoutコンポーネント追加"
+
+# ❌ Bad - 無関係な変更を混在
+git commit -m "feat: Header追加とタイポ修正とpackage.json更新"
+```
+
+### コミット頻度
+- **小さく頻繁に**: 大きな変更は小さな単位に分割
+- **完成してからコミット**: 動作する状態でコミット
+- **WIP使用**: 作業中は `wip:` プレフィックス使用可
+
+## 🌿 ブランチ戦略
+
+### ブランチ命名規則
+```
+<type>/<issue-number>-<short-description>
+```
+
+**例**:
+- `feat/3-layout-structure` - Issue #3のレイアウト機能
+- `fix/15-search-bug` - Issue #15の検索バグ修正
+- `docs/update-readme` - README更新
+
+### ブランチ種別
+- **feat/**: 新機能開発
+- **fix/**: バグ修正
+- **docs/**: ドキュメント更新
+- **refactor/**: リファクタリング
+- **chore/**: 雑務・設定変更
+
+### マージ戦略
+- **Squash Merge**: 機能ブランチはsquashでマージ
+- **履歴整理**: 関連コミットをまとめて見やすく
+- **メッセージ統一**: マージ後のコミットメッセージも規約準拠
+
+## 📚 コミットメッセージ例
+
+### 新機能追加
+```
+feat(ui): shadcn/ui Button・Cardコンポーネント追加
+
+- class-variance-authorityを使用したvariant対応
+- アクセシビリティ属性の適切な設定
+- TypeScript型定義の完全サポート
+
+Issue #3
+```
+
+### バグ修正
+```
+fix(api): microCMS接続エラーハンドリング修正
+
+- 環境変数未設定時のエラーメッセージ改善
+- APIキー無効時の適切なフォールバック
+- TypeScript型ガードの追加
+
+Closes #12
+```
+
+### ドキュメント更新
+```
+docs(rules): コミットメッセージ規約追加
+
+- Conventional Commits準拠のフォーマット定義
+- ブランチ命名規則とマージ戦略を明文化
+- 実際の例文とベストプラクティスを記載
+
+Issue #3
+```
+
+### 依存関係更新
+```
+chore(deps): shadcn/uiとRadix UI依存関係追加
+
+- class-variance-authority, clsx, tailwind-merge追加
+- @radix-ui/react-slot, @radix-ui/react-navigation-menu追加
+- lucide-reactアイコンライブラリ導入
+
+Issue #3
+```
+
+### リファクタリング
+```
+refactor(components): Header・Footerコンポーネント分離
+
+- App.tsxからレイアウト関連を独立
+- 再利用可能なLayout構造に変更
+- TypeScript型定義の改善
+
+Issue #3
+```
+
+## ⚠️ 避けるべきパターン
+
+### 曖昧なメッセージ
+```bash
+# ❌ Bad
+git commit -m "修正"
+git commit -m "update"
+git commit -m "fix bug"
+git commit -m "作業中"
+```
+
+### 複数の責任
+```bash
+# ❌ Bad
+git commit -m "feat: Header追加とFooter修正とREADME更新"
+```
+
+### 英語と日本語混在
+```bash
+# ❌ Bad
+git commit -m "add Header component"
+git commit -m "feat: ヘッダー component added"
+```
+
+## 🔧 便利なGitエイリアス
+
+```bash
+# .gitconfig または Git設定
+[alias]
+  co = commit
+  cm = commit -m
+  amend = commit --amend --no-edit
+  log-oneline = log --oneline --graph --decorate
+  log-issue = log --grep="Issue #"
+```
+
+---
+
+**最終更新**: 2024年7月（Issue #3完了時点）

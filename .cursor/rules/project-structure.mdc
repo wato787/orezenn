@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 # プロジェクト構成ルール
 
 ## 📁 ディレクトリ構造
@@ -126,7 +129,7 @@ src/types/
 ├── api.ts                # microCMS API型（作成済み）✅
 │                         # - Article, Author, Category, Tag, Series
 │                         # - 検索・フィルタ、統計、SEO関連型
-├── ui.ts                 # UI関連型（作成済み）✅  
+├── ui.ts                 # UI関連型（作成済み）✅
 │                         # - コンポーネントProps、状態管理型
 │                         # - フォーム、アニメーション設定型
 ├── router.ts             # ルーティング型（今後）
@@ -234,4 +237,241 @@ import { ArticleCard } from '../../../components/features/ArticleCard';
 
 ---
 
-**最終更新**: 2024年7月（Issue #4完了時点） 
+**最終更新**: 2024年7月（Issue #4完了時点）
+# プロジェクト構成ルール
+
+## 📁 ディレクトリ構造
+
+### 現在の構成
+```
+orezenn/
+├── .cursor/
+│   └── rules/              # プロジェクトルール（この場所）
+├── public/                 # 静的ファイル
+├── src/
+│   ├── components/         # UIコンポーネント
+│   ├── hooks/              # カスタムフック（今後作成）
+│   ├── lib/                # ライブラリ設定・ユーティリティ
+│   ├── pages/              # ページコンポーネント（React Router用）
+│   ├── types/              # TypeScript型定義
+│   ├── utils/              # ヘルパー関数（今後作成）
+│   ├── assets/             # 画像・アイコン等
+│   ├── App.tsx             # メインアプリケーション
+│   ├── main.tsx            # エントリーポイント
+│   ├── index.css           # グローバルCSS（Tailwind含む）
+│   └── vite-env.d.ts       # Vite環境変数型定義
+├── .env.example            # 環境変数テンプレート
+├── .env.local              # ローカル環境変数
+├── .editorconfig           # エディタ設定
+├── biome.json              # Biome設定（今後作成）
+├── package.json            # 依存関係・スクリプト
+├── postcss.config.js       # PostCSS設定
+├── tsconfig.json           # TypeScript設定
+├── tsconfig.app.json       # アプリ用TypeScript設定
+├── tsconfig.node.json      # Node.js用TypeScript設定
+└── vite.config.ts          # Vite設定
+```
+
+## 🎯 ディレクトリ別ルール
+
+### `/src/components/`
+コンポーネントを機能別に分類：
+
+```
+src/components/
+├── layout/                 # レイアウト関連
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── Layout.tsx
+│   └── Navigation.tsx
+├── ui/                     # 基本UIコンポーネント
+│   ├── Button.tsx
+│   ├── Card.tsx
+│   ├── Loading.tsx
+│   ├── ErrorMessage.tsx
+│   └── index.ts           # re-export
+├── features/              # 機能別コンポーネント
+│   ├── ArticleCard.tsx
+│   ├── ArticleList.tsx
+│   ├── CategoryFilter.tsx
+│   └── SearchBox.tsx
+└── shared/                # 共通コンポーネント（今後）
+    ├── Pagination.tsx
+    └── Skeleton.tsx
+```
+
+**命名規則**:
+- PascalCase（例: `ArticleCard.tsx`）
+- 単一コンポーネント = 単一ファイル
+- インデックスファイルでre-export推奨
+
+### `/src/pages/`
+React Router用のページコンポーネント：
+
+```
+src/pages/
+├── .gitkeep               # 現在は空ディレクトリ保持用
+├── HomePage.tsx           # 今後作成
+├── ArticleListPage.tsx    # 今後作成
+├── ArticleDetailPage.tsx  # 今後作成
+├── CategoryPage.tsx       # 今後作成
+└── NotFoundPage.tsx       # 今後作成
+```
+
+**ルール**:
+- `*Page.tsx` 命名規則
+- ページ固有のロジック・レイアウトのみ
+- ビジネスロジックは`/hooks/`や`/lib/`に分離
+
+### `/src/hooks/`
+カスタムフック（今後作成）：
+
+```
+src/hooks/
+├── api/                   # API関連フック
+│   ├── useArticles.ts
+│   ├── useArticle.ts
+│   ├── useCategories.ts
+│   └── index.ts
+├── ui/                    # UI関連フック
+│   ├── usePagination.ts
+│   ├── useModal.ts
+│   └── index.ts
+└── utils/                 # ユーティリティフック
+    ├── useLocalStorage.ts
+    └── useDebounce.ts
+```
+
+**命名**:
+- `use` プレフィックス必須
+- 機能を明確に表現
+
+### `/src/lib/`
+外部ライブラリ設定・ユーティリティ：
+
+```
+src/lib/
+├── query.ts              # TanStack Query設定（作成済み）
+├── microcms.ts           # microCMS設定（作成済み）
+├── router.ts             # React Router設定（今後）
+├── auth.ts               # 認証関連（将来的に）
+└── utils.ts              # 汎用ユーティリティ（今後）
+```
+
+### `/src/types/`
+TypeScript型定義：
+
+```
+src/types/
+├── api.ts                # microCMS API型（作成済み）✅
+│                         # - Article, Author, Category, Tag, Series
+│                         # - 検索・フィルタ、統計、SEO関連型
+├── ui.ts                 # UI関連型（作成済み）✅
+│                         # - コンポーネントProps、状態管理型
+│                         # - フォーム、アニメーション設定型
+├── router.ts             # ルーティング型（今後）
+└── global.ts             # グローバル型（今後）
+```
+
+**規則**:
+- 機能別にファイル分割
+- `export`で明示的エクスポート
+- interfaceとtypeの使い分け
+
+## 🔧 設定ファイル
+
+### パッケージ管理
+- **pnpm**: 高速・効率的なパッケージマネージャ
+- **package.json**: 依存関係とスクリプト定義
+- **pnpm-lock.yaml**: ロックファイル（コミット必須）
+
+### ビルド・開発
+- **Vite**: 高速ビルドツール
+- **vite.config.ts**: Vite設定、パスエイリアス定義
+- **PostCSS**: CSS処理（Tailwind用）
+
+### TypeScript
+- **tsconfig.json**: ベース設定
+- **tsconfig.app.json**: アプリケーション用
+- **tsconfig.node.json**: Node.js用（Vite設定等）
+
+### リンター・フォーマッター
+- **Biome**: 統合リンター・フォーマッター
+- **biome.json**: 設定ファイル（今後作成）
+- **ESLint**: 使用しない（削除済み）
+
+## 📋 パスエイリアス
+
+### 設定済みエイリアス
+```typescript
+// vite.config.ts & tsconfig.app.json
+"@/*": ["./src/*"]
+"@/components/*": ["./src/components/*"]
+"@/utils/*": ["./src/utils/*"]
+"@/hooks/*": ["./src/hooks/*"]
+"@/types/*": ["./src/types/*"]
+```
+
+### 使用例
+```typescript
+// ✅ Good - エイリアス使用
+import { ArticleCard } from '@/components/features/ArticleCard';
+import { fetchArticles } from '@/lib/microcms';
+import type { Article } from '@/types/api';
+
+// ❌ Bad - 相対パス
+import { ArticleCard } from '../../../components/features/ArticleCard';
+```
+
+## 🚫 除外ファイル・ディレクトリ
+
+### .gitignore 対象
+- `node_modules/`
+- `dist/`
+- `.env.local`
+- `*.log`
+- `.DS_Store`
+
+### 削除済みファイル
+- `eslint.config.js` - Biome使用のため削除
+- `tailwind.config.js` - Tailwind v4使用のため不要
+
+## 📝 ファイル命名規則
+
+### 基本ルール
+- **コンポーネント**: PascalCase（`ArticleCard.tsx`）
+- **ページ**: PascalCase + Page suffix（`HomePage.tsx`）
+- **フック**: camelCase + use prefix（`useArticles.ts`）
+- **ユーティリティ**: camelCase（`formatDate.ts`）
+- **設定ファイル**: kebab-case（`vite.config.ts`）
+
+### 特殊ファイル
+- `index.ts`: re-exportファイル
+- `.gitkeep`: 空ディレクトリ保持
+- `README.md`: ドキュメント
+
+## 🔄 今後の展開
+
+### Phase 1: 基本構造
+- [x] TanStack Query導入
+- [x] microCMS SDK導入
+- [x] 共通レイアウト構造作成（shadcn/ui）
+- [x] microCMS型定義作成
+- [ ] API呼び出しフック作成
+- [ ] ページルーティング設定
+
+### Phase 2: 機能拡張
+- [ ] 検索・フィルタリング
+- [ ] 無限スクロール
+- [ ] エラーハンドリング
+- [ ] パフォーマンス最適化
+
+### Phase 3: UX改善
+- [ ] PWA対応
+- [ ] ダークモード
+- [ ] アクセシビリティ向上
+- [ ] SEO最適化
+
+---
+
+**最終更新**: 2024年7月（Issue #4完了時点）

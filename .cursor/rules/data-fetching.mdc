@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 # データ取得・TanStack Query ルール
 
 ## 🔄 TanStack Query 基本ルール
@@ -21,7 +24,7 @@ const { data } = useQuery(['data'], getData); // 曖昧なqueryKey
 
 ### queryKey命名規則
 - **構造**: `[エンドポイント名, パラメータオブジェクト]`
-- **例**: 
+- **例**:
   - `['articles']` - 全記事
   - `['articles', { page: 1 }]` - ページネーション付き
   - `['articles', id]` - 特定記事
@@ -29,7 +32,7 @@ const { data } = useQuery(['data'], getData); // 曖昧なqueryKey
 
 ```typescript
 // ✅ 一貫したqueryKey設計
-const articlesQueryKey = (params?: ArticleSearchParams) => 
+const articlesQueryKey = (params?: ArticleSearchParams) =>
   params ? ['articles', params] : ['articles'];
 
 const articleQueryKey = (id: string) => ['articles', id];
@@ -72,9 +75,9 @@ export const useArticle = (id: string) => {
 export const useArticlesWithPagination = (page: number = 1, limit: number = 10) => {
   return useQuery({
     queryKey: ['articles', { page, limit }],
-    queryFn: () => fetchArticles({ 
-      limit, 
-      offset: (page - 1) * limit 
+    queryFn: () => fetchArticles({
+      limit,
+      offset: (page - 1) * limit
     }),
     keepPreviousData: true, // ページ切り替え時のUX改善
   });
@@ -117,11 +120,11 @@ const ArticleList = () => {
   const { data: articles, isLoading, isError, error } = useArticles();
 
   if (isLoading) return <LoadingSkeleton />;
-  
+
   if (isError) {
     return (
-      <ErrorMessage 
-        title="記事の取得に失敗しました" 
+      <ErrorMessage
+        title="記事の取得に失敗しました"
         message={error instanceof Error ? error.message : '不明なエラー'}
         onRetry={() => refetch()}
       />
@@ -171,7 +174,7 @@ const ArticleDetail = ({ id }: { id: string }) => {
           <LoadingSpinner size="sm" />
         </div>
       )}
-      
+
       <ArticleContent article={article} />
     </div>
   );
@@ -210,4 +213,217 @@ const ArticleCard = ({ article }: { article: Article }) => {
 
 ---
 
-**最終更新**: 2024年7月 
+**最終更新**: 2024年7月
+# データ取得・TanStack Query ルール
+
+## 🔄 TanStack Query 基本ルール
+
+### useQuery使用方針
+- **必須**: すべてのAPI呼び出しに`useQuery`または`useMutation`を使用
+- **必須**: queryKeyは配列形式で明確に命名
+- **推奨**: enabledオプションで条件付き実行
+
+```typescript
+// ✅ Good
+const { data: articles, isLoading, isError } = useQuery({
+  queryKey: ['articles', { page: 1, category: 'tech' }],
+  queryFn: () => fetchArticles({ limit: 10, offset: 0 }),
+  enabled: !!categoryId, // 条件付き実行
+});
+
+// ❌ Bad
+const { data } = useQuery(['data'], getData); // 曖昧なqueryKey
+```
+
+### queryKey命名規則
+- **構造**: `[エンドポイント名, パラメータオブジェクト]`
+- **例**:
+  - `['articles']` - 全記事
+  - `['articles', { page: 1 }]` - ページネーション付き
+  - `['articles', id]` - 特定記事
+  - `['categories']` - カテゴリ一覧
+
+```typescript
+// ✅ 一貫したqueryKey設計
+const articlesQueryKey = (params?: ArticleSearchParams) =>
+  params ? ['articles', params] : ['articles'];
+
+const articleQueryKey = (id: string) => ['articles', id];
+const categoriesQueryKey = () => ['categories'];
+```
+
+## 📦 カスタムフック設計
+
+### API呼び出しフック
+- **場所**: `src/hooks/api/` ディレクトリ（今後作成）
+- **命名**: `use + エンドポイント名`
+- **責任**: データ取得とキャッシュ管理
+
+```typescript
+// src/hooks/api/useArticles.ts
+export const useArticles = (params?: ArticleSearchParams) => {
+  return useQuery({
+    queryKey: ['articles', params],
+    queryFn: () => fetchArticles(params),
+    staleTime: 5 * 60 * 1000, // 5分
+  });
+};
+
+// src/hooks/api/useArticle.ts
+export const useArticle = (id: string) => {
+  return useQuery({
+    queryKey: ['articles', id],
+    queryFn: () => fetchArticle(id),
+    enabled: !!id,
+  });
+};
+```
+
+### ページネーション対応
+- **通常**: `useQuery`でページ単位
+- **無限スクロール**: `useInfiniteQuery`（将来実装）
+
+```typescript
+// ページネーション
+export const useArticlesWithPagination = (page: number = 1, limit: number = 10) => {
+  return useQuery({
+    queryKey: ['articles', { page, limit }],
+    queryFn: () => fetchArticles({
+      limit,
+      offset: (page - 1) * limit
+    }),
+    keepPreviousData: true, // ページ切り替え時のUX改善
+  });
+};
+```
+
+## ⚡ キャッシュ戦略
+
+### 設定済みキャッシュ
+- **staleTime**: 5分（データが新鮮とみなされる時間）
+- **gcTime**: 30分（ガベージコレクション時間）
+- **refetchOnWindowFocus**: false（ウィンドウフォーカス時の再取得無効）
+
+### キャッシュ無効化
+- **記事更新時**: 関連するqueryKeyのキャッシュを無効化
+- **カテゴリ変更時**: 記事一覧のキャッシュを無効化
+
+```typescript
+// ミューテーション後のキャッシュ無効化
+const mutation = useMutation({
+  mutationFn: updateArticle,
+  onSuccess: (data) => {
+    // 特定記事のキャッシュを無効化
+    queryClient.invalidateQueries({ queryKey: ['articles', data.id] });
+    // 記事一覧のキャッシュを無効化
+    queryClient.invalidateQueries({ queryKey: ['articles'] });
+  },
+});
+```
+
+## 🚨 エラーハンドリング
+
+### API エラー
+- **必須**: `isError`状態を適切にハンドリング
+- **推奨**: Error Boundaryとの組み合わせ（今後実装）
+- **ユーザビリティ**: 分かりやすいエラーメッセージ
+
+```typescript
+const ArticleList = () => {
+  const { data: articles, isLoading, isError, error } = useArticles();
+
+  if (isLoading) return <LoadingSkeleton />;
+
+  if (isError) {
+    return (
+      <ErrorMessage
+        title="記事の取得に失敗しました"
+        message={error instanceof Error ? error.message : '不明なエラー'}
+        onRetry={() => refetch()}
+      />
+    );
+  }
+
+  return <ArticleGrid articles={articles?.contents || []} />;
+};
+```
+
+### リトライ設定
+- **デフォルト**: 2回リトライ（query.ts設定済み）
+- **間隔**: 指数関数的増加（1秒→2秒→4秒）
+- **カスタム**: 重要なAPIには個別設定
+
+```typescript
+// 重要なAPIには個別のリトライ設定
+const { data } = useQuery({
+  queryKey: ['critical-data'],
+  queryFn: fetchCriticalData,
+  retry: 3, // デフォルトより多くリトライ
+  retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+});
+```
+
+## 🔄 ローディング状態管理
+
+### 状態フラグ
+- **isLoading**: 初回ロード時
+- **isFetching**: バックグラウンド更新時
+- **isPending**: 保留状態
+- **isRefetching**: 手動再取得時
+
+```typescript
+// 適切なローディング表示
+const ArticleDetail = ({ id }: { id: string }) => {
+  const { data: article, isLoading, isFetching } = useArticle(id);
+
+  // 初回ローディング
+  if (isLoading) return <ArticleSkeleton />;
+
+  return (
+    <div className="relative">
+      {/* バックグラウンド更新のインジケータ */}
+      {isFetching && (
+        <div className="absolute top-2 right-2">
+          <LoadingSpinner size="sm" />
+        </div>
+      )}
+
+      <ArticleContent article={article} />
+    </div>
+  );
+};
+```
+
+## 📊 パフォーマンス最適化
+
+### プリフェッチ
+- **推奨**: ユーザーの行動を予測してデータを先読み
+- **タイミング**: ホバー時、ページ遷移前
+
+```typescript
+// ホバー時のプリフェッチ
+const ArticleCard = ({ article }: { article: Article }) => {
+  const queryClient = useQueryClient();
+
+  const handleMouseEnter = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['articles', article.id],
+      queryFn: () => fetchArticle(article.id),
+    });
+  };
+
+  return (
+    <div onMouseEnter={handleMouseEnter}>
+      {/* カードコンテンツ */}
+    </div>
+  );
+};
+```
+
+### バックグラウンド更新
+- **自動**: ネットワーク再接続時
+- **手動**: ユーザーのプルリフレッシュ操作
+
+---
+
+**最終更新**: 2024年7月
