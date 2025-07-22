@@ -1,6 +1,3 @@
----
-alwaysApply: true
----
 
 # TypeScript ルール
 
@@ -127,134 +124,57 @@ const element = document.getElementById('root')!; // DOM要素の存在が確実
 - **noImplicitAny**: true
 - **strictNullChecks**: true
 
+## 🚨 型定義修正の原則
+
+### 重要な原則
+- **型定義は実際のデータ構造に合わせる**: 不要なプロパティを追加しない
+- **使用箇所を修正する**: 型定義を無理に拡張するのではなく、使用箇所を適切に修正
+- **microCMSスキーマに準拠**: 実際のAPIレスポンス構造に合わせる
+
+```typescript
+// ❌ Bad - 不要なプロパティを追加
+interface Category extends MicroCMSContent {
+  name: string;
+  slug: string; // 実際には存在しない
+  emoji?: string; // 実際には存在しない
+}
+
+// ✅ Good - 実際の構造に合わせる
+interface Category extends MicroCMSContent {
+  name: string;
+}
+
+// 使用箇所で適切に修正
+// category.slug → category.id
+// category.emoji → 削除
+```
+
+### 型定義修正の手順
+1. **実際のデータ構造を確認**: microCMSのレスポンスを確認
+2. **使用箇所を特定**: エラーが出ている箇所を特定
+3. **適切な修正**: 型定義ではなく使用箇所を修正
+4. **ビルド確認**: `pnpm build`でエラーがないことを確認
+
+### よくある修正パターン
+```typescript
+// カテゴリのルーティング
+// ❌ Bad
+to={`/categories/${article.category.slug}`}
+
+// ✅ Good
+to={`/categories/${article.category.id}`}
+
+// カテゴリの絵文字表示
+// ❌ Bad
+{article.category.emoji && <span>{article.category.emoji}</span>}
+
+// ✅ Good
+// 絵文字プロパティが存在しない場合は削除
+```
+
 ---
 
-**最終更新**: 2024年7月（Issue #4完了時点）
-# TypeScript ルール
+**最終更新**: 2024年7月（Issue #35完了時点）
 
-## 🎯 型安全性
-
-### 基本原則
-- **必須**: 全ての変数・関数に型を明示的に定義
-- **必須**: `any`を使用しない
-- **必須**: `unknown`を適切に使用
-- **推奨**: strictモードを維持
-
-```typescript
-// ✅ Good
-const count: number = 0;
-const message: string = 'Hello';
-const isActive: boolean = true;
-
-// ❌ Bad
-const count = 0; // 型推論に頼りすぎ（明示的でない）
-const data: any = response; // anyは禁止
-```
-
-### インターフェース定義
-- **必須**: オブジェクト型はinterfaceで定義
-- **推奨**: 継承関係がある場合はextendsを活用
-- **命名**: PascalCaseで明確な名前
-
-```typescript
-// ✅ Good
-interface Article extends MicroCMSContent {
-  title: string;
-  content: string;
-  author: Author;
-}
-
-interface ApiResponse<T> {
-  data: T;
-  success: boolean;
-}
-
-// ❌ Bad
-type article = { // 小文字は×
-  title: any; // anyは×
-}
-```
-
-### 型ガード
-- **推奨**: 型ガード関数を適切に使用
-- **必須**: 外部データの型チェック
-
-```typescript
-// ✅ Good
-const isArticle = (data: unknown): data is Article => {
-  return typeof data === 'object' &&
-         data !== null &&
-         'title' in data &&
-         'content' in data;
-};
-
-// 使用例
-if (isArticle(response)) {
-  // responseはArticle型として扱われる
-  console.log(response.title);
-}
-```
-
-## 📦 型定義ファイル
-
-### ファイル配置
-- **場所**: `src/types/` ディレクトリ
-- **分類**: 機能別に分割
-  - `api.ts` - microCMS関連の型（作成済み）✅
-  - `ui.ts` - UI関連の型（作成済み）✅
-  - `utils.ts` - ユーティリティ関連の型（今後追加予定）
-
-### 型エクスポート
-- **必須**: `export`で明示的にエクスポート
-- **推奨**: 関連する型をまとめてエクスポート
-
-```typescript
-// src/types/api.ts
-export interface Article { ... }
-export interface Author { ... }
-export interface Category { ... }
-
-// リレーション型も定義
-export type ArticlesResponse = MicroCMSListResponse<Article>;
-```
-
-## 🔧 環境変数の型定義
-
-### vite-env.d.ts
-- **必須**: 環境変数の型定義を追加
-- **命名**: `VITE_*`プレフィックス
-
-```typescript
-// src/vite-env.d.ts
-interface ImportMetaEnv {
-  readonly VITE_MICROCMS_SERVICE_DOMAIN: string;
-  readonly VITE_MICROCMS_API_KEY: string;
-  // 新しい環境変数を追加時はここに型定義
-}
-```
-
-## ⚠️ 型エラー対応
-
-### エラー解決順序
-1. **型定義の確認** - インターフェースが正しいか
-2. **型ガードの使用** - unknown型の適切な処理
-3. **非null assertion (`!`)** - 最後の手段として限定的に使用
-
-```typescript
-// ✅ 型ガードを使用
-if (data && typeof data === 'object' && 'title' in data) {
-  return data.title;
-}
-
-// ⚠️ 非null assertionは限定的に
-const element = document.getElementById('root')!; // DOM要素の存在が確実な場合のみ
-```
-
-### 設定
-- **tsconfig.json**: strict設定を維持
-- **noImplicitAny**: true
-- **strictNullChecks**: true
-
----
 
 **最終更新**: 2024年7月（Issue #4完了時点）
