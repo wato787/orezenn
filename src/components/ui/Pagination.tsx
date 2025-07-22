@@ -9,6 +9,10 @@ interface PaginationProps {
   showFirstLast?: boolean;
   maxVisiblePages?: number;
   className?: string;
+  // 記事数情報を追加
+  totalCount?: number;
+  pageSize?: number;
+  showArticleInfo?: boolean;
 }
 
 /**
@@ -21,6 +25,9 @@ export const Pagination = ({
   showFirstLast = true,
   maxVisiblePages = 5,
   className,
+  totalCount,
+  pageSize = 9,
+  showArticleInfo = false,
 }: PaginationProps) => {
   // ページネーションで表示するページ番号を計算
   const getVisiblePages = () => {
@@ -72,76 +79,90 @@ export const Pagination = ({
   }
 
   return (
-    <nav
-      role="navigation"
-      aria-label="ページネーション"
-      className={cn("flex items-center justify-center", className)}
-    >
-      <div className="flex items-center gap-1">
-        {/* 前のページボタン */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={!canGoPrev}
-          aria-label="前のページ"
-          className="h-9 px-3"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          <span className="sr-only sm:not-sr-only ml-1">前へ</span>
-        </Button>
+    <div className={cn("space-y-4", className)}>
+      {/* 記事数情報 */}
+      {showArticleInfo && totalCount !== undefined && (
+        <div className="text-center">
+          <div className="text-sm text-muted-foreground">
+            {totalCount} 件中{" "}
+            {Math.min(totalCount, (currentPage - 1) * pageSize + 1)} -{" "}
+            {Math.min(totalCount, currentPage * pageSize)} 件を表示
+          </div>
+        </div>
+      )}
 
-        {/* ページ番号 */}
+      {/* ページネーション */}
+      <nav
+        role="navigation"
+        aria-label="ページネーション"
+        className="flex items-center justify-center"
+      >
         <div className="flex items-center gap-1">
-          {visiblePages.map((page, index) => {
-            if (page === "ellipsis") {
-              return (
-                <div
-                  key={`ellipsis-${index}`}
-                  className="flex h-9 w-9 items-center justify-center"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </div>
-              );
-            }
+          {/* 前のページボタン */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={!canGoPrev}
+            aria-label="前のページ"
+            className="h-9 px-3"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only sm:not-sr-only ml-1">前へ</span>
+          </Button>
 
-            const isActive = page === currentPage;
-            return (
-              <Button
-                key={page}
-                variant={isActive ? "default" : "outline"}
-                size="sm"
-                onClick={() => onPageChange(page)}
-                aria-label={`ページ ${page}${
-                  isActive ? " (現在のページ)" : ""
-                }`}
-                aria-current={isActive ? "page" : undefined}
-                className="h-9 w-9"
-              >
-                {page}
-              </Button>
-            );
-          })}
+          {/* ページ番号 */}
+          <div className="flex items-center gap-1">
+            {visiblePages.map((page, index) => {
+              if (page === "ellipsis") {
+                return (
+                  <div
+                    key={`ellipsis-${index}`}
+                    className="flex h-9 w-9 items-center justify-center"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </div>
+                );
+              }
+
+              const isActive = page === currentPage;
+              return (
+                <Button
+                  key={page}
+                  variant={isActive ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => onPageChange(page)}
+                  aria-label={`ページ ${page}${
+                    isActive ? " (現在のページ)" : ""
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                  className="h-9 w-9"
+                >
+                  {page}
+                </Button>
+              );
+            })}
+          </div>
+
+          {/* 次のページボタン */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={!canGoNext}
+            aria-label="次のページ"
+            className="h-9 px-3"
+          >
+            <span className="sr-only sm:not-sr-only mr-1">次へ</span>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
 
-        {/* 次のページボタン */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={!canGoNext}
-          aria-label="次のページ"
-          className="h-9 px-3"
-        >
-          <span className="sr-only sm:not-sr-only mr-1">次へ</span>
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* ページ情報（小画面では非表示） */}
-      <div className="hidden md:block ml-4 text-sm text-muted-foreground">
-        {currentPage} / {totalPages} ページ
-      </div>
-    </nav>
+        {/* ページ情報（小画面では非表示） */}
+        <div className="hidden md:block ml-4 text-sm text-muted-foreground">
+          {currentPage} / {totalPages} ページ
+        </div>
+      </nav>
+    </div>
   );
 };
