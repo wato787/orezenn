@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import type { Category } from "@/types/api";
 import { cn } from "@/utils/cn";
-import { FolderOpen } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface CategoryCardProps {
@@ -24,21 +24,22 @@ export const CategoryCard = ({
       <Link to={`/categories/${category.id}`}>
         <Card
           className={cn(
-            "hover:shadow-md transition-shadow cursor-pointer h-full",
+            "group hover:shadow-md transition-all duration-300 cursor-pointer h-full border-border/50 hover:border-border",
+            "bg-card hover:bg-accent/5",
             className
           )}
         >
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <FolderOpen className="h-5 w-5 text-primary flex-shrink-0" />
-              <div className="min-w-0 flex-1">
-                <h3 className="font-medium text-sm truncate">{name}</h3>
-                {articleCount !== undefined && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {articleCount}件の記事
-                  </p>
-                )}
-              </div>
+          <CardContent className="p-3">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-medium text-sm truncate text-foreground group-hover:text-primary transition-colors">
+                {name}
+              </h3>
+              {articleCount !== undefined && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                  <FileText className="h-3 w-3" />
+                  <span>{articleCount}件</span>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -50,23 +51,30 @@ export const CategoryCard = ({
     <Link to={`/categories/${category.id}`}>
       <Card
         className={cn(
-          "hover:shadow-md transition-shadow cursor-pointer h-full",
+          "group hover:shadow-lg transition-all duration-300 cursor-pointer h-full",
+          "border-border/50 hover:border-primary/20 bg-card hover:bg-accent/5",
+          "transform hover:-translate-y-0.5",
           className
         )}
       >
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-3">
-            <FolderOpen className="h-8 w-8 text-primary flex-shrink-0" />
-            <div className="min-w-0 flex-1">
-              <CardTitle className="text-lg truncate">{name}</CardTitle>
+        <CardContent className="p-4">
+          <div className="flex flex-col items-center text-center space-y-2">
+            {/* カテゴリ名 */}
+            <div className="space-y-1">
+              <h3 className="font-medium text-base text-foreground group-hover:text-primary transition-colors">
+                {name}
+              </h3>
+
+              {/* 記事数 */}
               {articleCount !== undefined && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  {articleCount}件の記事
-                </p>
+                <div className="inline-flex items-center gap-1 px-2 py-1 bg-muted/50 rounded-full text-xs text-muted-foreground">
+                  <FileText className="h-3 w-3" />
+                  <span>{articleCount}件</span>
+                </div>
               )}
             </div>
           </div>
-        </CardHeader>
+        </CardContent>
       </Card>
     </Link>
   );
