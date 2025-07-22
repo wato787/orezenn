@@ -89,53 +89,49 @@ src/
 - pnpm
 - microCMSアカウント・プロジェクト
 
-### microCMS設定
-1. microCMSでプロジェクト作成
-2. 「記事」APIの作成（以下のフィールド推奨）
-   ```
-   - title: テキスト（記事タイトル）
-   - content: リッチエディタ（HTML記事本文）
-   - slug: テキスト（URL用スラッグ）※現在はID指定
-   - publishedAt: 日時（公開日時）
-   - category: コンテンツ参照（カテゴリ）
-   - tags: 複数コンテンツ参照（タグ）
-   - eyecatch: 画像（アイキャッチ画像）
-   - excerpt: テキストエリア（記事概要）
-   - emoji: テキスト（記事絵文字）
-   - readingTime: 数値（読書時間）
-   ```
-3. APIキーの取得（環境変数用）
-
-### ローカル開発環境セットアップ
+### インストール
 ```bash
-# 依存関係インストール
+# 依存関係のインストール
 pnpm install
 
-# 環境変数ファイル作成
-cp .env.example .env.local
+# Playwrightブラウザのインストール
+npx playwright install
+```
 
-# .env.localに以下を設定
-VITE_MICROCMS_SERVICE_DOMAIN=your-service-domain
-VITE_MICROCMS_API_KEY=your-api-key
-
+### 開発サーバー起動
+```bash
 # 開発サーバー起動
 pnpm dev
 ```
 
-### 利用可能なスクリプト
+### テスト実行
 ```bash
-# 開発
-pnpm dev              # 開発サーバー起動
-pnpm build            # プロダクションビルド
-pnpm preview          # ビルド結果のプレビュー
+# E2Eテスト実行
+pnpm test:e2e
 
-# コード品質
-pnpm type-check       # TypeScript型チェック
-pnpm lint             # Biome lint実行
-pnpm format           # Biome format実行（書き込み）
-pnpm format:check     # Biome format チェック（書き込みなし）
-pnpm check            # Biome 全体チェック
-pnpm check:fix        # Biome 自動修正付きチェック
+# E2Eテスト（UIモード）
+pnpm test:e2e:ui
+
+# E2Eテスト（ヘッド付きブラウザ）
+pnpm test:e2e:headed
+
+# E2Eテスト（デバッグモード）
+pnpm test:e2e:debug
+```
+
+### ビルド・デプロイ
+```bash
+# 型チェック
+pnpm type-check
+
+# リント・フォーマット
+pnpm check
+
+# ビルド
+pnpm build
+
+# プレビュー
+pnpm preview
 ```
 
 ## 🎯 開発ロードマップ
