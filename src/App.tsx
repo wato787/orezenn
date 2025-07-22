@@ -2,12 +2,16 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArticleDetailPage, ArticleListPage } from "@/pages";
+import {
+  ArticleDetailPage,
+  ArticleListPage,
+  CategoriesPage,
+  CategoryArticlesPage,
+} from "@/pages";
 import { BookOpen, Code, Sparkles } from "lucide-react";
 import { Route, Routes } from "react-router-dom";
 
@@ -19,6 +23,10 @@ const App = () => {
         <Route path="/articles" element={<ArticleListPage />} />
         <Route path="/articles/:slug" element={<ArticleDetailPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
+        <Route
+          path="/categories/:categoryId"
+          element={<CategoryArticlesPage />}
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>
@@ -100,21 +108,6 @@ const HomePage = () => (
         </CardDescription>
       </CardHeader>
     </Card>
-  </div>
-);
-
-const CategoriesPage = () => (
-  <div className="container py-8">
-    <div className="text-center">
-      <h1 className="text-3xl font-bold mb-4">カテゴリ</h1>
-      <Card className="max-w-2xl mx-auto">
-        <CardContent className="pt-6">
-          <p className="text-muted-foreground">
-            🏷️ カテゴリ機能は次のIssueで実装予定です
-          </p>
-        </CardContent>
-      </Card>
-    </div>
   </div>
 );
 

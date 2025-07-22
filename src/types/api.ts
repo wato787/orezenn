@@ -40,17 +40,10 @@ export interface Author extends MicroCMSContent {
 }
 
 /**
- * カテゴリ情報
+ * カテゴリ情報（実際のmicroCMSレスポンスに基づく）
  */
 export interface Category extends MicroCMSContent {
   name: string;
-  slug: string;
-  description?: string;
-  color?: string;
-  icon?: string; // アイコン名（Lucide React等）
-  emoji?: string; // 絵文字
-  isPublished: boolean;
-  sortOrder: number;
 }
 
 /**

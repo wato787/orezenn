@@ -14,3 +14,9 @@ export {
     type ArticleQueryInvalidation
 } from './useArticles';
 
+// カテゴリ関連フック
+export {
+    categoriesQueryKeys, useCategories,
+    useCategory
+} from './useCategories';
+
