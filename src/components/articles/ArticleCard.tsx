@@ -22,7 +22,7 @@ interface ArticleCardProps {
 }
 
 /**
- * Zenn/Qiitaライクなデザインの記事カードコンポーネント
+ * Zennライクなデザインの記事カードコンポーネント
  */
 export const ArticleCard = ({
   article,
@@ -35,11 +35,11 @@ export const ArticleCard = ({
   const getVariantStyles = () => {
     switch (variant) {
       case "compact":
-        return "hover:shadow-md transition-shadow";
+        return "hover:shadow-md transition-shadow bg-white border border-gray-200";
       case "featured":
-        return "border-primary/20 bg-primary/5 hover:shadow-lg transition-all";
+        return "border-primary/20 bg-primary/5 hover:shadow-lg transition-all bg-white border border-gray-200";
       default:
-        return "hover:shadow-md transition-shadow";
+        return "hover:shadow-md transition-shadow bg-white border border-gray-200";
     }
   };
 
@@ -81,7 +81,7 @@ export const ArticleCard = ({
                         <Link
                           key={cat.id}
                           to={`/categories/${cat.id}`}
-                          className="inline-block rounded-lg bg-primary/10 text-primary text-sm px-3 py-1.5 font-semibold"
+                          className="inline-block rounded-full bg-gray-100 text-gray-700 text-sm px-3 py-1.5 font-medium hover:bg-gray-200 transition-colors"
                         >
                           {cat.name}
                         </Link>
@@ -93,7 +93,7 @@ export const ArticleCard = ({
 
               {/* コンパクト表示の画像エリア */}
               <Link to={`/articles/${article.id}`} className="flex-shrink-0">
-                <div className="w-20 h-16 bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                <div className="w-20 h-16 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
                   {article.eyecatch ? (
                     <img
                       src={article.eyecatch.url}
@@ -115,7 +115,7 @@ export const ArticleCard = ({
       <>
         {/* 画像エリア（必ず表示） */}
         <Link to={`/articles/${article.id}`}>
-          <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted flex items-center justify-center">
+          <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-gray-100 flex items-center justify-center">
             {article.eyecatch ? (
               <img
                 src={article.eyecatch.url}
@@ -141,7 +141,7 @@ export const ArticleCard = ({
             </Link>
 
             {showExcerpt && article.excerpt && (
-              <CardDescription className="mt-3 line-clamp-3">
+              <CardDescription className="mt-3 line-clamp-3 text-gray-600">
                 {article.excerpt}
               </CardDescription>
             )}
@@ -170,7 +170,7 @@ export const ArticleCard = ({
                   <Link
                     key={cat.id}
                     to={`/categories/${cat.id}`}
-                    className="inline-block rounded-full bg-black text-white text-sm px-3 py-1.5 "
+                    className="inline-block rounded-full bg-gray-100 text-gray-700 text-sm px-3 py-1.5 font-medium hover:bg-gray-200 transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -202,7 +202,7 @@ export const ArticleCard = ({
                   <Link
                     key={tag.id}
                     to={`/tags/${tag.slug}`}
-                    className="inline-flex items-center gap-1 text-xs bg-muted hover:bg-muted/80 px-2 py-1 rounded transition-colors"
+                    className="inline-flex items-center gap-1 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded transition-colors"
                   >
                     <Tag className="h-3 w-3" />
                     {tag.name}
