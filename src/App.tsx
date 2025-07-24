@@ -9,6 +9,7 @@ import {
   LinksPage,
 } from "@/pages";
 import { Link, Route, Routes } from "react-router-dom";
+import NewArticle from "./pages/new-article";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           element={<CategoryArticlesPage />}
         />
         <Route path="/links" element={<LinksPage />} />
+        <Route path="/new-article" element={<NewArticle />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>

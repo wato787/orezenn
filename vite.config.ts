@@ -9,6 +9,8 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+
+
       manifest: {
         name: "orezenn",
         short_name: "orezenn",
