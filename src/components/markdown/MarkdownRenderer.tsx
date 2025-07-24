@@ -33,7 +33,7 @@ export const MarkdownRenderer = ({
   return (
     <div
       className={cn(
-        "prose prose-slate max-w-none dark:prose-invert",
+        "prose prose-slate max-w-none dark:prose-invert blog-content",
         className
       )}
     >
