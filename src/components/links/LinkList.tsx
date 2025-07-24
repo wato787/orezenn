@@ -50,10 +50,6 @@ export const LinkList = ({ className }: LinkListProps) => {
     return { total, read, unread };
   }, [linksData?.contents]);
 
-  const handleEdit = (link: Link) => {
-    setEditingLink(link);
-  };
-
   const handleFormSuccess = () => {
     setEditingLink(undefined);
     refetch();
@@ -171,7 +167,7 @@ export const LinkList = ({ className }: LinkListProps) => {
       ) : linksData?.contents && linksData.contents.length > 0 ? (
         <div className="grid gap-4">
           {linksData.contents.map((link) => (
-            <LinkCard key={link.id} link={link} onEdit={handleEdit} />
+            <LinkCard key={link.id} link={link} />
           ))}
         </div>
       ) : (
