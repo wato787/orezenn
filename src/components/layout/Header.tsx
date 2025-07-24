@@ -13,7 +13,7 @@ export const Header = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+      const isMac = navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
       const isCtrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
 
       if (isCtrlOrCmd && e.key === "f") {
