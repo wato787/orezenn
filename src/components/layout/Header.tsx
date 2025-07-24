@@ -4,9 +4,10 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { SearchBox } from "../articles";
-import { useEffect, useRef } from "react";
+import { Button } from "../ui";
 
 export const Header = () => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -81,6 +82,11 @@ export const Header = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        <div className="w-12 ml-auto">
+          <Button>
+            <Link to="/new-article">投稿</Link>
+          </Button>
+        </div>
         <div className="ml-auto w-64">
           <SearchBox
             className="bg-white"
