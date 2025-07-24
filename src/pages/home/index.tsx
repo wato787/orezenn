@@ -16,7 +16,7 @@ export const HomePage = () => {
   const articles = articlesResponse?.contents || [];
 
   return (
-    <div className="py-8">
+    <div className="space-y-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -44,7 +44,7 @@ export const HomePage = () => {
           </div>
         ) : articles.length === 0 ? (
           <div className="text-center py-12">
-            <div className="p-6 bg-gray-100 rounded-3xl inline-block mb-6">
+            <div className="p-6 bg-gray-100 rounded-2xl inline-block mb-6">
               <FileText className="h-16 w-16 text-gray-400 mx-auto" />
             </div>
             <h3 className="text-xl font-semibold mb-2 text-gray-900">

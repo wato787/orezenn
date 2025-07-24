@@ -34,11 +34,11 @@ export const ArticleCard = ({
   const getVariantStyles = () => {
     switch (variant) {
       case "compact":
-        return "hover:shadow-md transition-shadow bg-white border border-gray-200";
+        return "zenn-card-hover hover:shadow-lg transition-all duration-200 bg-white border border-gray-200 hover:border-gray-300";
       case "featured":
-        return "border-primary/20 bg-primary/5 hover:shadow-lg transition-all bg-white border border-gray-200";
+        return "zenn-card-hover border-primary/20 bg-primary/5 hover:shadow-xl transition-all duration-200 bg-white border border-gray-200 hover:border-primary/30";
       default:
-        return "hover:shadow-md transition-shadow bg-white border border-gray-200";
+        return "zenn-card-hover hover:shadow-lg transition-all duration-200 bg-white border border-gray-200 hover:border-gray-300";
     }
   };
 
@@ -119,7 +119,7 @@ export const ArticleCard = ({
               <img
                 src={article.eyecatch.url}
                 alt={article.title}
-                className="w-full h-full object-cover transition-transform hover:scale-105"
+                className="w-full h-full object-cover transition-transform hover:scale-105 duration-200"
               />
             ) : (
               <div className="text-center text-muted-foreground">
