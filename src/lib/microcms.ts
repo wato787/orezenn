@@ -91,10 +91,7 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
   const filters: string[] = [];
 
   if (params.categoryId) {
-    filters.push(`category[equals]${params.categoryId}`);
-  }
-  if (params.categorySlug) {
-    filters.push(`category.slug[equals]${params.categorySlug}`);
+    filters.push(`categories[contains]${params.categoryId}`);
   }
   if (params.tagId) {
     filters.push(`tags[contains]${params.tagId}`);
@@ -104,9 +101,6 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
   }
   if (params.type) {
     filters.push(`type[equals]${params.type}`);
-  }
-  if (params.status) {
-    filters.push(`status[equals]${params.status}`);
   }
   if (params.difficulty) {
     filters.push(`difficulty[equals]${params.difficulty}`);
