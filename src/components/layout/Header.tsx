@@ -81,8 +81,9 @@ export const Header = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="ml-auto">
+        <div className="ml-auto w-64">
           <SearchBox
+            className="bg-white"
             onSearch={() => {}}
             placeholder="記事検索..."
             ref={searchInputRef as React.RefObject<HTMLInputElement>}
