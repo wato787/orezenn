@@ -77,21 +77,8 @@ export const LinkList = ({ className }: LinkListProps) => {
 
   return (
     <div className={cn("space-y-6", className)}>
-      {/* ヘッダー */}
-      <div>
-        <h1 className="text-2xl font-bold">気になる記事</h1>
-        <p className="text-gray-600 mt-1">
-          後で読みたい記事を保存・管理できます
-        </p>
-      </div>
-
       {/* 登録フォーム */}
-      <div className="bg-gray-50 p-6 rounded-lg border">
-        <h2 className="text-lg font-semibold mb-4">
-          {editingLink ? "リンクを編集" : "新しいリンクを追加"}
-        </h2>
-        <LinkForm link={editingLink} onSuccess={handleFormSuccess} />
-      </div>
+      <LinkForm link={editingLink} onSuccess={handleFormSuccess} />
 
       {/* 統計情報 */}
       <div className="grid grid-cols-3 gap-4">
