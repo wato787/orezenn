@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -231,14 +230,6 @@ export const ArticleCard = ({
                     +{article.techStack.length - 4}
                   </span>
                 )}
-              </div>
-            )}
-
-            {variant === "featured" && (
-              <div className="pt-2">
-                <Button asChild variant="outline" size="sm">
-                  <Link to={`/articles/${article.slug}`}>記事を読む</Link>
-                </Button>
               </div>
             )}
           </div>

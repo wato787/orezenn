@@ -3,7 +3,7 @@ import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { SectionLoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/Pagination";
 import { useArticles, useCategory } from "@/hooks";
-import { ArrowLeft, FileText, FolderOpen, Hash } from "lucide-react";
+import { ArrowLeft, FileText, FolderOpen } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
 export const CategoryArticlesPage = () => {
@@ -26,7 +26,6 @@ export const CategoryArticlesPage = () => {
     error: articlesError,
   } = useArticles({
     categoryId,
-    status: "published",
     limit,
     offset,
     orders: "-publishedAt",
@@ -93,26 +92,6 @@ export const CategoryArticlesPage = () => {
         <Breadcrumb items={breadcrumbItems} className="text-sm" />
       </div>
 
-      {/* カテゴリヘッダー */}
-      <div className="mb-12">
-        <div className="text-center">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl">
-              <Hash className="h-8 w-8 text-primary" />
-            </div>
-          </div>
-
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            {category.name}
-          </h1>
-
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-full text-muted-foreground">
-            <FileText className="h-4 w-4" />
-            <span className="font-medium">{totalCount}件の記事</span>
-          </div>
-        </div>
-      </div>
-
       {/* 記事一覧 */}
       {articles.length === 0 ? (
         <div className="text-center py-16">
@@ -134,21 +113,21 @@ export const CategoryArticlesPage = () => {
           </Link>
         </div>
       ) : (
-        <div className="space-y-12">
-          {/* セクションタイトル */}
-          <div className="flex items-center gap-3">
-            <div className="h-1 w-8 bg-gradient-to-r from-primary to-primary/50 rounded-full"></div>
-            <h2 className="text-xl font-semibold text-foreground">記事一覧</h2>
-          </div>
+        <div className="space-y-8">
+          {/* 記事グリッド - 横幅を活用 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            {/* 最初の記事は大きく表示 */}
+            {articles.length > 0 && (
+              <div className="lg:col-span-2 xl:col-span-1">
+                <ArticleCard article={articles[0]} variant="featured" />
+              </div>
+            )}
 
-          {/* 記事グリッド */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                variant="default"
-              />
+            {/* 残りの記事は通常サイズ */}
+            {articles.slice(1).map((article) => (
+              <div key={article.id}>
+                <ArticleCard article={article} variant="default" />
+              </div>
             ))}
           </div>
 
