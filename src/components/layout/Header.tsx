@@ -5,8 +5,26 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router-dom";
+import { SearchBox } from "../articles";
+import { useEffect, useRef } from "react";
 
 export const Header = () => {
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+      const isCtrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+      if (isCtrlOrCmd && e.key === "f") {
+        e.preventDefault(); // ブラウザ標準の検索を無効化
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -63,6 +81,13 @@ export const Header = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        <div className="ml-auto">
+          <SearchBox
+            onSearch={() => {}}
+            placeholder="記事検索..."
+            ref={searchInputRef as React.RefObject<HTMLInputElement>}
+          />
+        </div>
       </div>
     </header>
   );

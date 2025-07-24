@@ -6,12 +6,14 @@ interface SearchBoxProps {
   onSearch: (query: string) => void;
   placeholder?: string;
   className?: string;
+  ref?: React.RefObject<HTMLInputElement>;
 }
 
 export const SearchBox = ({
   onSearch,
   placeholder = "記事を検索...",
   className,
+  ref,
 }: SearchBoxProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -39,6 +41,7 @@ export const SearchBox = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 pr-10"
+          ref={ref}
         />
         {searchQuery && (
           <button

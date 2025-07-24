@@ -87,14 +87,12 @@ export const ArticleListPage = ({ pageSize = 9 }: ArticleListPageProps) => {
   // 検索変更
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    setCurrentPage(1);
     updateURLParams({ q: query || undefined, page: undefined });
   };
 
   // フィルタクリア
   const handleClearFilters = () => {
     setSearchQuery("");
-    setCurrentPage(1);
     updateURLParams({ q: undefined, page: undefined });
   };
 
