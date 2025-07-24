@@ -8,6 +8,9 @@ import type {
   CategoriesResponse,
   Category,
   CategorySearchParams,
+  Link,
+  LinkSearchParams,
+  LinksResponse,
   Series,
   SeriesResponse,
   Tag,
@@ -91,10 +94,7 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
   const filters: string[] = [];
 
   if (params.categoryId) {
-    filters.push(`category[equals]${params.categoryId}`);
-  }
-  if (params.categorySlug) {
-    filters.push(`category.slug[equals]${params.categorySlug}`);
+    filters.push(`categories[contains]${params.categoryId}`);
   }
   if (params.tagId) {
     filters.push(`tags[contains]${params.tagId}`);
@@ -104,9 +104,6 @@ const buildMicroCMSQueries = (params: ArticleSearchParams): MicroCMSQueries => {
   }
   if (params.type) {
     filters.push(`type[equals]${params.type}`);
-  }
-  if (params.status) {
-    filters.push(`status[equals]${params.status}`);
   }
   if (params.difficulty) {
     filters.push(`difficulty[equals]${params.difficulty}`);
@@ -339,4 +336,90 @@ export const fetchFeedArticles = async (limit: number = 20) => {
     limit,
     orders: "-publishedAt",
   });
+};
+
+/**
+ * リンク一覧取得用のヘルパー関数
+ */
+export const fetchLinks = async (
+  params?: LinkSearchParams
+): Promise<LinksResponse> => {
+  const queries: MicroCMSQueries = {};
+
+  if (params?.q) queries.q = params.q;
+  if (params?.limit) queries.limit = params.limit;
+  if (params?.offset) queries.offset = params.offset;
+  if (params?.orders) queries.orders = params.orders;
+
+  const filters: string[] = [];
+  if (params?.isRead !== undefined) {
+    filters.push(`isRead[equals]${params.isRead}`);
+  }
+
+  if (filters.length > 0) {
+    queries.filters = filters.join("[and]");
+  }
+
+  return fetchFromMicroCMS<LinksResponse>("links", queries);
+};
+
+/**
+ * リンク詳細取得
+ */
+export const fetchLink = async (id: string): Promise<Link> => {
+  return fetchFromMicroCMS<Link>(`links/${id}`);
+};
+
+/**
+ * リンク作成
+ */
+export const createLink = async (content: { link: string; description: string; isRead?: boolean }): Promise<Link> => {
+  try {
+    const response = await microCMSClient.create({
+      endpoint: "links",
+      content: {
+        ...content,
+        isRead: content.isRead || false,
+      },
+    });
+    return response as Link;
+  } catch (error) {
+    console.error("Link creation error:", error);
+    throw new Error("リンクの作成に失敗しました");
+  }
+};
+
+/**
+ * リンク更新
+ */
+export const updateLink = async (id: string, content: { link: string; description: string; isRead?: boolean }): Promise<Link> => {
+  try {
+    const response = await microCMSClient.update({
+      endpoint: "links",
+      contentId: id,
+      content: {
+        ...content,
+        isRead: content.isRead !== undefined ? content.isRead : false,
+      },
+    });
+    return response as Link;
+  } catch (error) {
+    console.error("Link update error:", error);
+    throw new Error("リンクの更新に失敗しました");
+  }
+};
+
+/**
+ * リンク削除
+ */
+export const deleteLink = async (id: string): Promise<void> => {
+  try {
+    await microCMSClient.delete({
+      endpoint: "links",
+      contentId: id,
+    });
+  } catch (error) {
+    console.error("Link deletion error:", error);
+    throw new Error("リンクの削除に失敗しました");
+  }
 };

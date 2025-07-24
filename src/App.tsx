@@ -6,6 +6,7 @@ import {
   CategoriesPage,
   CategoryArticlesPage,
   HomePage,
+  LinksPage,
 } from "@/pages";
 import { Link, Route, Routes } from "react-router-dom";
 
@@ -21,6 +22,7 @@ const App = () => {
           path="/categories/:categoryId"
           element={<CategoryArticlesPage />}
         />
+        <Route path="/links" element={<LinksPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>

@@ -328,3 +328,29 @@ export interface BatchResult<T> {
   }>;
   totalProcessed: number;
 }
+
+/**
+ * 気になる記事・リンク情報
+ */
+export interface Link extends MicroCMSContent {
+  link: string; // URL
+  description: string; // 説明
+  isRead: boolean; // 既読フラグ
+}
+
+/**
+ * リンク検索パラメータ
+ */
+export interface LinkSearchParams {
+  q?: string; // 検索キーワード
+  isRead?: boolean; // 既読状態フィルター
+  limit?: number;
+  offset?: number;
+  orders?: string;
+  filters?: string[];
+}
+
+/**
+ * リンクレスポンス型
+ */
+export type LinksResponse = MicroCMSListResponse<Link>;
